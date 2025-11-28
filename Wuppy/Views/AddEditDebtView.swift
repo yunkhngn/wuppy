@@ -42,39 +42,93 @@ struct AddEditDebtView: View {
     }
     
     var body: some View {
-        Form {
-            Section("details") {
-                TextField("person_name", text: $personName)
-                Picker("role", selection: $role) {
-                    ForEach(DebtRole.allCases, id: \.self) { role in
-                        Text(role.rawValue).tag(role)
+        ScrollView {
+            VStack(spacing: 24) {
+                // Header
+                Text(debtToEdit == nil ? "new_debt" : "edit_debt")
+                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                    .padding(.top)
+                
+                // Details Section
+                WuppyCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        WuppySectionHeader(title: "details", icon: "doc.text.fill")
+                        
+                        WuppyTextField(title: "person_name", text: $personName, icon: "person.fill")
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("role")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .foregroundStyle(.secondary)
+                            Picker("", selection: $role) {
+                                ForEach(DebtRole.allCases, id: \.self) { role in
+                                    Text(role.rawValue).tag(role)
+                                }
+                            }
+                            .labelsHidden()
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("currency")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .foregroundStyle(.secondary)
+                            Picker("", selection: $currency) {
+                                Text("VND").tag("VND")
+                                Text("USD").tag("USD")
+                            }
+                            .labelsHidden()
+                            .pickerStyle(.segmented)
+                        }
+                        
+                        WuppyNumberField(title: "amount", value: $principalAmount, format: .currency(code: currency), icon: "banknote")
+                        
+                        WuppyNumberField(title: "interest_rate", value: Binding(get: { interestRate ?? 0 }, set: { interestRate = $0 }), format: .number, icon: "percent")
                     }
                 }
+                .padding(.horizontal)
                 
-                Picker("currency", selection: $currency) {
-                    Text("VND").tag("VND")
-                    Text("USD").tag("USD")
+                // Dates Section
+                WuppyCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        WuppySectionHeader(title: "dates", icon: "calendar")
+                        
+                        Toggle("has_due_date", isOn: $hasDueDate)
+                            .toggleStyle(.switch)
+                        
+                        if hasDueDate {
+                            DatePicker("due_date", selection: $dueDate, displayedComponents: .date)
+                                .datePickerStyle(.graphical)
+                        }
+                    }
                 }
-                .pickerStyle(.segmented)
+                .padding(.horizontal)
                 
-                TextField("amount", value: $principalAmount, format: .currency(code: currency))
-                TextField("interest_rate", value: $interestRate, format: .number)
-            }
-            
-            Section("dates") {
-                Toggle("has_due_date", isOn: $hasDueDate)
-                if hasDueDate {
-                    DatePicker("due_date", selection: $dueDate, displayedComponents: .date)
+                // Notes Section
+                WuppyCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        WuppySectionHeader(title: "notes", icon: "note.text")
+                        
+                        TextEditor(text: $notes)
+                            .frame(minHeight: 100)
+                            .padding(8)
+                            .background(Color(nsColor: .controlBackgroundColor))
+                            .cornerRadius(8)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+                            )
+                    }
                 }
-            }
-            
-            Section("notes") {
-                TextEditor(text: $notes)
-                    .frame(minHeight: 100)
+                .padding(.horizontal)
+                
+                Spacer().frame(height: 20)
             }
         }
-        .formStyle(.grouped)
-        .navigationTitle(debtToEdit == nil ? "new_debt" : "edit_debt")
+        .background(Color(nsColor: .windowBackgroundColor))
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("cancel") {
@@ -85,6 +139,7 @@ struct AddEditDebtView: View {
                 Button("save") {
                     save()
                 }
+                .buttonStyle(.borderedProminent)
                 .disabled(personName.isEmpty || principalAmount <= 0)
             }
         }
@@ -93,8 +148,7 @@ struct AddEditDebtView: View {
                 currency = defaultCurrency
             }
         }
-        .padding()
-        .frame(minWidth: 400, minHeight: 400)
+        .frame(minWidth: 400, minHeight: 500)
     }
     
     private func save() {

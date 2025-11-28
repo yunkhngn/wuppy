@@ -69,10 +69,10 @@ struct WuppyTextField: View {
     }
 }
 
-struct WuppyNumberField: View {
+struct WuppyNumberField<F: ParseableFormatStyle>: View where F.FormatInput == Double, F.FormatOutput == String {
     let title: LocalizedStringKey
     @Binding var value: Double
-    var format: FloatingPointFormatStyle<Double>.Currency
+    var format: F
     var icon: String? = nil
     
     var body: some View {

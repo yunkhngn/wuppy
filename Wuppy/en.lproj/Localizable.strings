@@ -52,6 +52,7 @@
 "cancel" = "Cancel";
 "save" = "Save";
 "edit" = "Edit";
+"delete" = "Delete";
 "details" = "Details";
 "description" = "Description";
 "notes" = "Notes";
@@ -100,3 +101,9 @@
 "current_saved" = "Current Saved";
 "has_target_date" = "Has Target Date";
 "target_date" = "Target Date";
+"has_target_date" = "Has Target Date";
+
+// Analytics
+"analytics_title" = "Analytics";
+"income_over_time" = "Income Over Time";
+"expenses_by_category" = "Expenses by Category";

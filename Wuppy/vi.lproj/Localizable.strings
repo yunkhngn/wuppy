@@ -52,6 +52,7 @@
 "cancel" = "Hủy";
 "save" = "Lưu";
 "edit" = "Sửa";
+"delete" = "Xóa";
 "details" = "Chi tiết";
 "description" = "Mô tả";
 "notes" = "Ghi chú";
@@ -100,3 +101,9 @@
 "current_saved" = "Đã tiết kiệm";
 "has_target_date" = "Có ngày mục tiêu";
 "target_date" = "Ngày mục tiêu";
+"has_target_date" = "Có ngày mục tiêu";
+
+// Analytics
+"analytics_title" = "Thống kê";
+"income_over_time" = "Thu nhập theo thời gian";
+"expenses_by_category" = "Chi tiêu theo danh mục";

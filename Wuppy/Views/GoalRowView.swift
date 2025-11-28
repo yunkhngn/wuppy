@@ -11,28 +11,40 @@ struct GoalRowView: View {
     let goal: Goal
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(goal.name)
-                    .font(.headline)
-                Spacer()
-                Text(goal.progress, format: .percent.precision(.fractionLength(0)))
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-            }
-            
-            ProgressView(value: goal.currentAmount, total: goal.targetAmount)
-            
-            HStack {
-                Text(goal.currentAmount, format: .currency(code: goal.currency))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Text(goal.targetAmount, format: .currency(code: goal.currency))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+        WuppyCard(padding: 12) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text(goal.name)
+                        .font(.headline)
+                        .fontWeight(.bold)
+                    Spacer()
+                    Text(goal.progress, format: .percent.precision(.fractionLength(0)))
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.blue)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 2)
+                        .background(Color.blue.opacity(0.1))
+                        .clipShape(Capsule())
+                }
+                
+                ProgressView(value: goal.currentAmount, total: goal.targetAmount)
+                    .tint(.blue)
+                
+                HStack {
+                    Text(goal.currentAmount, format: .currency(code: goal.currency))
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(goal.targetAmount, format: .currency(code: goal.currency))
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                }
             }
         }
-        .padding(.vertical, 4)
+        .padding(.horizontal, 4)
+        .padding(.vertical, 2)
     }
 }

@@ -33,54 +33,53 @@ struct AnalyticsChartsView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 30) {
-            Text("Analytics")
-                .font(.title2)
-                .bold()
-            
-            if !incomeByMonth.isEmpty {
-                VStack(alignment: .leading) {
-                    Text("Income Over Time")
-                        .font(.headline)
-                    Chart {
-                        ForEach(incomeByMonth, id: \.date) { item in
-                            LineMark(
-                                x: .value("Month", item.date, unit: .month),
-                                y: .value("Income", item.amount)
-                            )
-                            .interpolationMethod(.catmullRom)
-                            
-                            AreaMark(
-                                x: .value("Month", item.date, unit: .month),
-                                y: .value("Income", item.amount)
-                            )
-                            .interpolationMethod(.catmullRom)
-                            .foregroundStyle(.linearGradient(colors: [.blue.opacity(0.3), .blue.opacity(0.0)], startPoint: .top, endPoint: .bottom))
+        WuppyCard {
+            VStack(alignment: .leading, spacing: 24) {
+                WuppySectionHeader(title: "analytics_title", icon: "chart.xyaxis.line")
+                
+                if !incomeByMonth.isEmpty {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("income_over_time")
+                            .font(.headline)
+                            .foregroundStyle(.secondary)
+                        Chart {
+                            ForEach(incomeByMonth, id: \.date) { item in
+                                LineMark(
+                                    x: .value("Month", item.date, unit: .month),
+                                    y: .value("Income", item.amount)
+                                )
+                                .interpolationMethod(.catmullRom)
+                                
+                                AreaMark(
+                                    x: .value("Month", item.date, unit: .month),
+                                    y: .value("Income", item.amount)
+                                )
+                                .interpolationMethod(.catmullRom)
+                                .foregroundStyle(.linearGradient(colors: [.blue.opacity(0.3), .blue.opacity(0.0)], startPoint: .top, endPoint: .bottom))
+                            }
                         }
+                        .frame(height: 200)
                     }
-                    .frame(height: 200)
                 }
-            }
-            
-            if !expensesByCategory.isEmpty {
-                VStack(alignment: .leading) {
-                    Text("Expenses by Category")
-                        .font(.headline)
-                    Chart {
-                        ForEach(expensesByCategory, id: \.category) { item in
-                            BarMark(
-                                x: .value("Category", item.category),
-                                y: .value("Amount", item.amount)
-                            )
-                            .foregroundStyle(by: .value("Category", item.category))
+                
+                if !expensesByCategory.isEmpty {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("expenses_by_category")
+                            .font(.headline)
+                            .foregroundStyle(.secondary)
+                        Chart {
+                            ForEach(expensesByCategory, id: \.category) { item in
+                                BarMark(
+                                    x: .value("Category", item.category),
+                                    y: .value("Amount", item.amount)
+                                )
+                                .foregroundStyle(by: .value("Category", item.category))
+                            }
                         }
+                        .frame(height: 200)
                     }
-                    .frame(height: 200)
                 }
             }
         }
-        .padding()
-        .background(Color(nsColor: .controlBackgroundColor))
-        .cornerRadius(12)
     }
 }

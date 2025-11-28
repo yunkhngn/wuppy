@@ -40,44 +40,101 @@ struct AddEditTransactionView: View {
     }
     
     var body: some View {
-        Form {
-            Section("details") {
-                Picker("job_type", selection: $type) {
-                    ForEach(TransactionType.allCases, id: \.self) { type in
-                        Text(type.rawValue).tag(type)
+        ScrollView {
+            VStack(spacing: 24) {
+                // Header
+                Text(transactionToEdit == nil ? "new_transaction" : "edit_transaction")
+                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                    .padding(.top)
+                
+                // Details Section
+                WuppyCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        WuppySectionHeader(title: "details", icon: "doc.text.fill")
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("job_type")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .foregroundStyle(.secondary)
+                            Picker("", selection: $type) {
+                                ForEach(TransactionType.allCases, id: \.self) { type in
+                                    Text(type.rawValue).tag(type)
+                                }
+                            }
+                            .labelsHidden()
+                            .pickerStyle(.segmented)
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("currency")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .foregroundStyle(.secondary)
+                            Picker("", selection: $currency) {
+                                Text("VND").tag("VND")
+                                Text("USD").tag("USD")
+                            }
+                            .labelsHidden()
+                            .pickerStyle(.segmented)
+                        }
+                        
+                        WuppyNumberField(title: "amount", value: $amount, format: .currency(code: currency), icon: "banknote")
+                        
+                        WuppyTextField(title: "category", text: $category, icon: "tag.fill")
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("date")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .foregroundStyle(.secondary)
+                            DatePicker("", selection: $date, displayedComponents: [.date, .hourAndMinute])
+                                .labelsHidden()
+                        }
                     }
                 }
-                .pickerStyle(.segmented)
+                .padding(.horizontal)
                 
-                Picker("currency", selection: $currency) {
-                    Text("VND").tag("VND")
-                    Text("USD").tag("USD")
-                }
-                .pickerStyle(.segmented)
-                
-                TextField("amount", value: $amount, format: .currency(code: currency))
-                
-                TextField("category", text: $category) // Could be a picker with predefined categories later
-                
-                DatePicker("date", selection: $date, displayedComponents: [.date, .hourAndMinute])
-            }
-            
-            Section("link_to_job") {
-                Picker("jobs_title", selection: $selectedJob) {
-                    Text("none").tag(nil as Job?)
-                    ForEach(jobs) { job in
-                        Text(job.title).tag(job as Job?)
+                // Job Link Section
+                WuppyCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        WuppySectionHeader(title: "link_to_job", icon: "link")
+                        
+                        Picker("", selection: $selectedJob) {
+                            Text("none").tag(nil as Job?)
+                            ForEach(jobs) { job in
+                                Text(job.title).tag(job as Job?)
+                            }
+                        }
+                        .labelsHidden()
                     }
                 }
-            }
-            
-            Section("notes") {
-                TextEditor(text: $note)
-                    .frame(minHeight: 100)
+                .padding(.horizontal)
+                
+                // Notes Section
+                WuppyCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        WuppySectionHeader(title: "notes", icon: "note.text")
+                        
+                        TextEditor(text: $note)
+                            .frame(minHeight: 100)
+                            .padding(8)
+                            .background(Color(nsColor: .controlBackgroundColor))
+                            .cornerRadius(8)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+                            )
+                    }
+                }
+                .padding(.horizontal)
+                
+                Spacer().frame(height: 20)
             }
         }
-        .formStyle(.grouped)
-        .navigationTitle(transactionToEdit == nil ? "new_transaction" : "edit_transaction")
+        .background(Color(nsColor: .windowBackgroundColor))
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("cancel") {
@@ -88,6 +145,7 @@ struct AddEditTransactionView: View {
                 Button("save") {
                     save()
                 }
+                .buttonStyle(.borderedProminent)
                 .disabled(amount <= 0 || category.isEmpty)
             }
         }
@@ -96,8 +154,7 @@ struct AddEditTransactionView: View {
                 currency = defaultCurrency
             }
         }
-        .padding()
-        .frame(minWidth: 400, minHeight: 400)
+        .frame(minWidth: 400, minHeight: 500)
     }
     
     private func save() {

@@ -22,6 +22,19 @@ struct GoalsView: View {
                 NavigationLink(value: goal) {
                     GoalRowView(goal: goal)
                 }
+                .contextMenu {
+                    Button {
+                        selectedGoal = goal
+                    } label: {
+                        Label("edit", systemImage: "pencil")
+                    }
+                    
+                    Button(role: .destructive) {
+                        modelContext.delete(goal)
+                    } label: {
+                        Label("delete", systemImage: "trash")
+                    }
+                }
             }
             .onDelete(perform: deleteGoals)
         }

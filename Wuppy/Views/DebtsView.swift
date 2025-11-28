@@ -22,6 +22,19 @@ struct DebtsView: View {
                 NavigationLink(value: debt) {
                     DebtRowView(debt: debt)
                 }
+                .contextMenu {
+                    Button {
+                        selectedDebt = debt
+                    } label: {
+                        Label("edit", systemImage: "pencil")
+                    }
+                    
+                    Button(role: .destructive) {
+                        modelContext.delete(debt)
+                    } label: {
+                        Label("delete", systemImage: "trash")
+                    }
+                }
             }
             .onDelete(perform: deleteDebts)
         }

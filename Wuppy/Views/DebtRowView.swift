@@ -11,29 +11,42 @@ struct DebtRowView: View {
     let debt: Debt
     
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(debt.personName)
-                    .font(.headline)
-                Text(debt.role.rawValue)
-                    .font(.caption)
-                    .foregroundStyle(debt.role == .iOwe ? .red : .green)
-            }
-            
-            Spacer()
-            
-            VStack(alignment: .trailing) {
-                Text(debt.remainingAmount, format: .currency(code: debt.currency))
-                    .font(.body)
-                    .fontWeight(.semibold)
+        WuppyCard(padding: 12) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(debt.personName)
+                        .font(.headline)
+                        .fontWeight(.bold)
+                    
+                    HStack(spacing: 6) {
+                        Text(debt.role.rawValue)
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 2)
+                            .background((debt.role == .iOwe ? Color.red : Color.green).opacity(0.1))
+                            .foregroundStyle(debt.role == .iOwe ? .red : .green)
+                            .clipShape(Capsule())
+                        
+                        if let dueDate = debt.dueDate {
+                            Text(dueDate, style: .date)
+                                .font(.caption)
+                                .foregroundStyle(dueDate < Date() ? .red : .secondary)
+                        }
+                    }
+                }
                 
-                if let dueDate = debt.dueDate {
-                    Text(dueDate, style: .date)
-                        .font(.caption)
-                        .foregroundStyle(dueDate < Date() ? .red : .secondary)
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text(debt.remainingAmount, format: .currency(code: debt.currency))
+                        .font(.body)
+                        .fontWeight(.bold)
+                        .foregroundStyle(debt.role == .iOwe ? .red : .green)
                 }
             }
         }
-        .padding(.vertical, 4)
+        .padding(.horizontal, 4)
+        .padding(.vertical, 2)
     }
 }

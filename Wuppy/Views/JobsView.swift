@@ -22,6 +22,36 @@ struct JobsView: View {
                 NavigationLink(value: job) {
                     JobRowView(job: job)
                 }
+                .contextMenu {
+                    Button {
+                        selectedJob = job
+                        showingAddJob = true
+                    } label: {
+                        Label("edit", systemImage: "pencil")
+                    }
+                    
+                    Button(role: .destructive) {
+                        modelContext.delete(job)
+                    } label: {
+                        Label("delete", systemImage: "trash")
+                    }
+                    
+                    Divider()
+                    
+                    Menu("job_status") {
+                        ForEach(JobStatus.allCases, id: \.self) { status in
+                            Button {
+                                job.status = status
+                            } label: {
+                                if job.status == status {
+                                    Label(status.rawValue, systemImage: "checkmark")
+                                } else {
+                                    Text(status.rawValue)
+                                }
+                            }
+                        }
+                    }
+                }
             }
             .onDelete(perform: deleteJobs)
         }

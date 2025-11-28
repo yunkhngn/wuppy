@@ -40,34 +40,80 @@ struct AddEditGoalView: View {
     }
     
     var body: some View {
-        Form {
-            Section("details") {
-                TextField("goal_name", text: $name)
+        ScrollView {
+            VStack(spacing: 24) {
+                // Header
+                Text(goalToEdit == nil ? "new_goal" : "edit_goal")
+                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                    .padding(.top)
                 
-                Picker("currency", selection: $currency) {
-                    Text("VND").tag("VND")
-                    Text("USD").tag("USD")
+                // Details Section
+                WuppyCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        WuppySectionHeader(title: "details", icon: "target")
+                        
+                        WuppyTextField(title: "goal_name", text: $name, icon: "flag.fill")
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("currency")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .foregroundStyle(.secondary)
+                            Picker("", selection: $currency) {
+                                Text("VND").tag("VND")
+                                Text("USD").tag("USD")
+                            }
+                            .labelsHidden()
+                            .pickerStyle(.segmented)
+                        }
+                        
+                        WuppyNumberField(title: "target_amount", value: $targetAmount, format: .currency(code: currency), icon: "banknote")
+                        
+                        WuppyNumberField(title: "current_saved", value: $currentAmount, format: .currency(code: currency), icon: "banknote.fill")
+                    }
                 }
-                .pickerStyle(.segmented)
+                .padding(.horizontal)
                 
-                TextField("target_amount", value: $targetAmount, format: .currency(code: currency))
-                TextField("current_saved", value: $currentAmount, format: .currency(code: currency))
-            }
-            
-            Section("dates") {
-                Toggle("has_target_date", isOn: $hasTargetDate)
-                if hasTargetDate {
-                    DatePicker("target_date", selection: $targetDate, displayedComponents: .date)
+                // Dates Section
+                WuppyCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        WuppySectionHeader(title: "dates", icon: "calendar")
+                        
+                        Toggle("has_target_date", isOn: $hasTargetDate)
+                            .toggleStyle(.switch)
+                        
+                        if hasTargetDate {
+                            DatePicker("target_date", selection: $targetDate, displayedComponents: .date)
+                                .datePickerStyle(.graphical)
+                        }
+                    }
                 }
-            }
-            
-            Section("notes") {
-                TextEditor(text: $notes)
-                    .frame(minHeight: 100)
+                .padding(.horizontal)
+                
+                // Notes Section
+                WuppyCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        WuppySectionHeader(title: "notes", icon: "note.text")
+                        
+                        TextEditor(text: $notes)
+                            .frame(minHeight: 100)
+                            .padding(8)
+                            .background(Color(nsColor: .controlBackgroundColor))
+                            .cornerRadius(8)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+                            )
+                    }
+                }
+                .padding(.horizontal)
+                
+                Spacer().frame(height: 20)
             }
         }
-        .formStyle(.grouped)
-        .navigationTitle(goalToEdit == nil ? "new_goal" : "edit_goal")
+        .background(Color(nsColor: .windowBackgroundColor))
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("cancel") {
@@ -78,6 +124,7 @@ struct AddEditGoalView: View {
                 Button("save") {
                     save()
                 }
+                .buttonStyle(.borderedProminent)
                 .disabled(name.isEmpty || targetAmount <= 0)
             }
         }
@@ -86,8 +133,7 @@ struct AddEditGoalView: View {
                 currency = defaultCurrency
             }
         }
-        .padding()
-        .frame(minWidth: 400, minHeight: 400)
+        .frame(minWidth: 400, minHeight: 500)
     }
     
     private func save() {

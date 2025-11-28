@@ -35,13 +35,26 @@ struct DashboardView: View {
             .mapValues { $0.reduce(0) { $0 + $1.remainingAmount } }
     }
     
+    var netResult: [String: Double] {
+        let currencies = Set(incomeByCurrency.keys).union(expensesByCurrency.keys)
+        return currencies.reduce(into: [:]) { dict, currency in
+            let income = incomeByCurrency[currency] ?? 0
+            let expense = expensesByCurrency[currency] ?? 0
+            dict[currency] = income - expense
+        }
+    }
+    
+    var currentDateString: String {
+        Date().formatted(.dateTime.weekday(.wide).day().month())
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 // Header
                 HStack {
                     VStack(alignment: .leading) {
-                        Text(Date(), format: .dateTime.weekday(.wide).day().month())
+                        Text(currentDateString)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .textCase(.uppercase)
@@ -57,14 +70,6 @@ struct DashboardView: View {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 220))], spacing: 20) {
                     MultiCurrencySummaryCard(title: "total_income", amounts: incomeByCurrency, gradient: WuppyColor.incomeGradient, icon: "arrow.down.left")
                     MultiCurrencySummaryCard(title: "total_expenses", amounts: expensesByCurrency, gradient: WuppyColor.expenseGradient, icon: "arrow.up.right")
-                    
-                    // Net Result Calculation
-                    let currencies = Set(incomeByCurrency.keys).union(expensesByCurrency.keys)
-                    let netResult: [String: Double] = currencies.reduce(into: [:]) { dict, currency in
-                        let income = incomeByCurrency[currency] ?? 0
-                        let expense = expensesByCurrency[currency] ?? 0
-                        dict[currency] = income - expense
-                    }
                     
                     MultiCurrencySummaryCard(title: "net_result", amounts: netResult, gradient: WuppyColor.netResultGradient, icon: "chart.bar.fill")
                 }
@@ -115,10 +120,10 @@ struct DashboardView: View {
     }
 }
 
-struct MultiCurrencySummaryCard: View {
+struct MultiCurrencySummaryCard<G: View>: View {
     let title: LocalizedStringKey
     let amounts: [String: Double]
-    let gradient: LinearGradient
+    let gradient: G
     let icon: String
     
     var body: some View {

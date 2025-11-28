@@ -22,6 +22,19 @@ struct TransactionsView: View {
                 NavigationLink(value: transaction) {
                     TransactionRowView(transaction: transaction)
                 }
+                .contextMenu {
+                    Button {
+                        selectedTransaction = transaction
+                    } label: {
+                        Label("edit", systemImage: "pencil")
+                    }
+                    
+                    Button(role: .destructive) {
+                        modelContext.delete(transaction)
+                    } label: {
+                        Label("delete", systemImage: "trash")
+                    }
+                }
             }
             .onDelete(perform: deleteTransactions)
         }
