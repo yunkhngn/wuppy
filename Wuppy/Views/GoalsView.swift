@@ -24,6 +24,7 @@ struct GoalsView: View {
                     .contextMenu {
                         Button {
                             selectedGoal = goal
+                            showingAddGoal = true
                         } label: {
                             Label("edit", systemImage: "pencil")
                         }
@@ -62,22 +63,20 @@ struct GoalsView: View {
         )
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button(action: { showingAddGoal = true }) {
+                Button(action: {
+                    selectedGoal = nil
+                    showingAddGoal = true
+                }) {
                     Label("Add Goal", systemImage: "plus")
                 }
             }
         }
-        .sheet(isPresented: $showingAddGoal) {
+        .inspector(isPresented: $showingAddGoal) {
             NavigationStack {
-                AddEditGoalView()
+                AddEditGoalView(goal: selectedGoal)
             }
             .environment(\.locale, locale)
-        }
-        .sheet(item: $selectedGoal) { goal in
-             NavigationStack {
-                 AddEditGoalView(goal: goal)
-             }
-             .environment(\.locale, locale)
+            .inspectorColumnWidth(min: 400, ideal: 500, max: 600)
         }
     }
     

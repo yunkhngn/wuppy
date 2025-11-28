@@ -38,77 +38,99 @@ struct AddEditGoalView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                // Header
-                Text(goalToEdit == nil ? "new_goal" : "edit_goal")
-                    .font(.system(size: 24, weight: .bold, design: .rounded))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    .padding(.top)
-                
-                // Details Section
-                WuppyCard {
-                    VStack(alignment: .leading, spacing: 16) {
-                        WuppySectionHeader(title: "details", icon: "target")
-                        
-                        WuppyTextField(title: "goal_name", text: $name, icon: "flag.fill")
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("currency")
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .foregroundStyle(.secondary)
-                            Picker("", selection: $currency) {
-                                Text("VND").tag("VND")
-                                Text("USD").tag("USD")
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Header
+                    Text(goalToEdit == nil ? "new_goal" : "edit_goal")
+                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                        .padding(.top)
+                    
+                    // Details Section
+                    WuppyCard {
+                        VStack(alignment: .leading, spacing: 16) {
+                            WuppySectionHeader(title: "details", icon: "target")
+                            
+                            WuppyTextField(title: "goal_name", text: $name, icon: "flag.fill")
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("currency")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.secondary)
+                                Picker("", selection: $currency) {
+                                    Text("VND").tag("VND")
+                                    Text("USD").tag("USD")
+                                }
+                                .labelsHidden()
+                                .pickerStyle(.segmented)
                             }
-                            .labelsHidden()
-                            .pickerStyle(.segmented)
-                        }
-                        
-                        WuppyNumberField(title: "target_amount", value: $targetAmount, format: .currency(code: currency), icon: "banknote")
-                    }
-                }
-                .padding(.horizontal)
-                
-                // Dates Section
-                WuppyCard {
-                    VStack(alignment: .leading, spacing: 16) {
-                        WuppySectionHeader(title: "dates", icon: "calendar")
-                        
-                        Toggle("has_target_date", isOn: $hasTargetDate)
-                            .toggleStyle(.switch)
-                        
-                        if hasTargetDate {
-                            DatePicker("target_date", selection: $targetDate, displayedComponents: .date)
-                                .datePickerStyle(.graphical)
+                            
+                            WuppyNumberField(title: "target_amount", value: $targetAmount, format: .currency(code: currency), icon: "banknote")
                         }
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .padding(.horizontal)
-                
-                // Notes Section
-                WuppyCard {
-                    VStack(alignment: .leading, spacing: 16) {
-                        WuppySectionHeader(title: "notes", icon: "note.text")
-                        
-                        TextEditor(text: $notes)
-                            .frame(minHeight: 100)
-                            .padding(8)
-                            .background(Color(nsColor: .controlBackgroundColor))
-                            .cornerRadius(8)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
-                            )
+                    .padding(.horizontal)
+                    
+                    // Dates Section
+                    WuppyCard {
+                        VStack(alignment: .leading, spacing: 16) {
+                            WuppySectionHeader(title: "dates", icon: "calendar")
+                            
+                            Toggle("has_target_date", isOn: $hasTargetDate)
+                                .toggleStyle(.switch)
+                            
+                            if hasTargetDate {
+                                DatePicker("target_date", selection: $targetDate, displayedComponents: .date)
+                                    .datePickerStyle(.graphical)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                    .padding(.horizontal)
+                    
+                    // Notes Section
+                    WuppyCard {
+                        VStack(alignment: .leading, spacing: 16) {
+                            WuppySectionHeader(title: "notes", icon: "note.text")
+                            
+                            TextEditor(text: $notes)
+                                .frame(minHeight: 100)
+                                .padding(8)
+                                .background(Color(nsColor: .controlBackgroundColor))
+                                .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+                                )
+                        }
+                    }
+                    .padding(.horizontal)
+                    
+                    Spacer().frame(height: 20)
                 }
-                .padding(.horizontal)
-                
-                Spacer().frame(height: 20)
             }
+            
+            Divider()
+            
+            HStack {
+                Button("cancel") {
+                    dismiss()
+                }
+                .keyboardShortcut(.cancelAction)
+                
+                Spacer()
+                
+                Button("save") {
+                    save()
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(name.isEmpty || targetAmount <= 0)
+                .keyboardShortcut(.defaultAction)
+            }
+            .padding()
+            .background(.bar)
         }
         .background(
             ZStack {
@@ -129,20 +151,6 @@ struct AddEditGoalView: View {
             }
             .ignoresSafeArea()
         )
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("cancel") {
-                    dismiss()
-                }
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                Button("save") {
-                    save()
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(name.isEmpty || targetAmount <= 0)
-            }
-        }
         .onAppear {
             if goalToEdit == nil {
                 currency = defaultCurrency

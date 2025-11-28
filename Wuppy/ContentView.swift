@@ -34,9 +34,8 @@ struct ContentView: View {
                 Text("Select an item")
             }
         }
-        .id(selection)
+        }
     }
-}
 
 #Preview {
     ContentView()

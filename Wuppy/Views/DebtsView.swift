@@ -24,6 +24,7 @@ struct DebtsView: View {
                     .contextMenu {
                         Button {
                             selectedDebt = debt
+                            showingAddDebt = true
                         } label: {
                             Label("edit", systemImage: "pencil")
                         }
