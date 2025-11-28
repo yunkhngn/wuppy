@@ -12,20 +12,24 @@ import SwiftData
 final class Goal {
     var name: String
     var targetAmount: Double
-    var currentAmount: Double
     var createdDate: Date
     var targetDate: Date?
     var currency: String
     var notes: String
     
-    init(name: String, targetAmount: Double, currentAmount: Double = 0, currency: String = "VND", createdDate: Date = Date(), targetDate: Date? = nil, notes: String = "") {
+    @Relationship(deleteRule: .cascade) var transactions: [Transaction]?
+    
+    init(name: String, targetAmount: Double, currency: String = "VND", createdDate: Date = Date(), targetDate: Date? = nil, notes: String = "") {
         self.name = name
         self.targetAmount = targetAmount
-        self.currentAmount = currentAmount
         self.currency = currency
         self.createdDate = createdDate
         self.targetDate = targetDate
         self.notes = notes
+    }
+    
+    var currentAmount: Double {
+        transactions?.reduce(0) { $0 + $1.amount } ?? 0
     }
     
     var progress: Double {

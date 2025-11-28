@@ -16,7 +16,6 @@ struct AddEditGoalView: View {
     
     @State private var name: String = ""
     @State private var targetAmount: Double = 0
-    @State private var currentAmount: Double = 0
     @State private var currency: String = "VND"
     @State private var targetDate: Date = Date().addingTimeInterval(86400 * 365)
     @State private var hasTargetDate: Bool = false
@@ -29,7 +28,6 @@ struct AddEditGoalView: View {
         if let goal {
             _name = State(initialValue: goal.name)
             _targetAmount = State(initialValue: goal.targetAmount)
-            _currentAmount = State(initialValue: goal.currentAmount)
             _currency = State(initialValue: goal.currency)
             if let d = goal.targetDate {
                 _targetDate = State(initialValue: d)
@@ -70,8 +68,6 @@ struct AddEditGoalView: View {
                         }
                         
                         WuppyNumberField(title: "target_amount", value: $targetAmount, format: .currency(code: currency), icon: "banknote")
-                        
-                        WuppyNumberField(title: "current_saved", value: $currentAmount, format: .currency(code: currency), icon: "banknote.fill")
                     }
                 }
                 .padding(.horizontal)
@@ -158,7 +154,6 @@ struct AddEditGoalView: View {
         if let goal = goalToEdit {
             goal.name = name
             goal.targetAmount = targetAmount
-            goal.currentAmount = currentAmount
             goal.currency = currency
             goal.targetDate = hasTargetDate ? targetDate : nil
             goal.notes = notes
@@ -166,7 +161,6 @@ struct AddEditGoalView: View {
             let newGoal = Goal(
                 name: name,
                 targetAmount: targetAmount,
-                currentAmount: currentAmount,
                 currency: currency,
                 targetDate: hasTargetDate ? targetDate : nil,
                 notes: notes

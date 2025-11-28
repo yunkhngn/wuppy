@@ -20,7 +20,6 @@ struct TransactionsView: View {
         List {
             ForEach(transactions) { transaction in
                 TransactionRowView(transaction: transaction)
-                    .wuppyHoverEffect()
                     .contentShape(Rectangle())
                     .contextMenu {
                         Button {

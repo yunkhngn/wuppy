@@ -11,7 +11,7 @@ struct DebtRowView: View {
     let debt: Debt
     
     var body: some View {
-        WuppyCard(padding: 12) {
+        WuppyCard(padding: 12, isInteractive: true) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(debt.personName)

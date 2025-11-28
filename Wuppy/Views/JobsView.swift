@@ -20,7 +20,6 @@ struct JobsView: View {
         List {
             ForEach(jobs) { job in
                 JobRowView(job: job)
-                    .wuppyHoverEffect()
                     .contentShape(Rectangle()) // Make entire row tappable for context menu
                     .contextMenu {
                         Button {

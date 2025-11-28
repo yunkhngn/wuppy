@@ -20,7 +20,6 @@ struct GoalsView: View {
         List {
             ForEach(goals) { goal in
                 GoalRowView(goal: goal)
-                    .wuppyHoverEffect()
                     .contentShape(Rectangle())
                     .contextMenu {
                         Button {

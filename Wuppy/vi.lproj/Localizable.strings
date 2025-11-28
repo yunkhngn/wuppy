@@ -108,6 +108,20 @@
 "income_over_time" = "Thu nhập theo thời gian";
 "expenses_by_category" = "Chi tiêu theo danh mục";
 
+// Categories
+"manage_categories" = "Quản lý danh mục";
+"categories" = "Danh mục";
+"add_category" = "Thêm danh mục";
+"new_category" = "Danh mục mới";
+"edit_category" = "Sửa danh mục";
+"category_name" = "Tên danh mục";
+
+// Links
+"links" = "Liên kết";
+"link_to_job" = "Gắn với Công việc";
+"link_to_goal" = "Gắn với Mục tiêu";
+"no_goals" = "Chưa có mục tiêu nào";
+
 // Enums - Job Status
 "job_status_draft" = "Nháp";
 "job_status_negotiating" = "Đàm phán";

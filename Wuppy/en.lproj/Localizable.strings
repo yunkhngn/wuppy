@@ -108,6 +108,20 @@
 "income_over_time" = "Income Over Time";
 "expenses_by_category" = "Expenses by Category";
 
+// Categories
+"manage_categories" = "Manage Categories";
+"categories" = "Categories";
+"add_category" = "Add Category";
+"new_category" = "New Category";
+"edit_category" = "Edit Category";
+"category_name" = "Category Name";
+
+// Links
+"links" = "Links";
+"link_to_job" = "Link to Job";
+"link_to_goal" = "Link to Goal";
+"no_goals" = "No active goals";
+
 // Enums - Job Status
 "job_status_draft" = "Draft";
 "job_status_negotiating" = "Negotiating";

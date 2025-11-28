@@ -36,6 +36,14 @@ struct SettingsView: View {
             }
             
             Section {
+                NavigationLink(destination: CategoryManagerView()) {
+                    Label("manage_categories", systemImage: "tag.fill")
+                }
+            } header: {
+                Text("categories")
+            }
+            
+            Section {
                 Toggle("enable_icloud_sync", isOn: .constant(true))
             } header: {
                 Text("sync_settings")

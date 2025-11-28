@@ -27,10 +27,14 @@ struct ContentView: View {
             case .goals:
                 GoalsView()
             case .settings:
-                SettingsView()
+                NavigationStack {
+                    SettingsView()
+                }
             case .none:
                 Text("Select an item")
             }
+        }
+        .id(selection)
         }
     }
 }

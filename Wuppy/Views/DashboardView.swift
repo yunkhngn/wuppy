@@ -14,6 +14,7 @@ struct DashboardView: View {
     @Query private var transactions: [Transaction]
     @Query private var debts: [Debt]
     @Query private var jobs: [Job]
+    @Query private var goals: [Goal]
     
     var incomeByCurrency: [String: Double] {
         Dictionary(grouping: transactions.filter { $0.type == .income }, by: { $0.currency })
@@ -93,6 +94,33 @@ struct DashboardView: View {
                     .padding(.horizontal)
                 }
                 
+                // Goals Section
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Image(systemName: "target")
+                            .foregroundStyle(.orange)
+                        Text("goals_title")
+                            .font(.title2)
+                            .bold()
+                    }
+                    .padding(.horizontal)
+                    
+                    if goals.isEmpty {
+                        Text("no_goals")
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal)
+                    } else {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 16) {
+                                ForEach(goals) { goal in
+                                    GoalDashboardCard(goal: goal)
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
+                }
+
                 // Charts Section
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {

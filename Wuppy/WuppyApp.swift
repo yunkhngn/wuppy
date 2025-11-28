@@ -18,6 +18,7 @@ struct WuppyApp: App {
         let schema = Schema([
             Item.self,
             Job.self,
+            JobCategory.self, // Added JobCategory
             TimeSession.self,
             Debt.self,
             Transaction.self,
@@ -27,6 +28,21 @@ struct WuppyApp: App {
 
         do {
             sharedModelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            
+            // Seed default categories if empty
+            let context = sharedModelContainer.mainContext
+            let descriptor = FetchDescriptor<JobCategory>()
+            let existingCategories = try context.fetch(descriptor)
+            
+            if existingCategories.isEmpty {
+                let defaults = ["Development", "Design", "Video Editing", "Music", "Other"]
+                for name in defaults {
+                    let category = JobCategory(name: name)
+                    context.insert(category)
+                }
+                try? context.save()
+            }
+            
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }

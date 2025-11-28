@@ -11,13 +11,22 @@ struct JobRowView: View {
     let job: Job
     
     var body: some View {
-        WuppyCard(padding: 12) {
+        WuppyCard(padding: 12, isInteractive: true) {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(job.title)
                             .font(.headline)
                             .fontWeight(.bold)
+                        
+                        if let category = job.category {
+                            Text(category.name)
+                                .font(.caption2)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.secondary.opacity(0.1))
+                                .clipShape(Capsule())
+                        }
                         
                         HStack(spacing: 4) {
                             Image(systemName: "person.fill")

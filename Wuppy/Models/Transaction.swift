@@ -24,6 +24,7 @@ final class Transaction {
     var note: String
     
     @Relationship(inverse: \Job.transactions) var job: Job?
+    @Relationship(inverse: \Goal.transactions) var goal: Goal?
     
     init(type: TransactionType, category: String, tags: [String] = [], amount: Double, date: Date = Date(), currency: String = "VND", note: String = "") {
         self.type = type

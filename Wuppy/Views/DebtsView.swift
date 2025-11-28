@@ -20,7 +20,6 @@ struct DebtsView: View {
         List {
             ForEach(debts) { debt in
                 DebtRowView(debt: debt)
-                    .wuppyHoverEffect()
                     .contentShape(Rectangle())
                     .contextMenu {
                         Button {

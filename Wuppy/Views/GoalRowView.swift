@@ -11,7 +11,7 @@ struct GoalRowView: View {
     let goal: Goal
     
     var body: some View {
-        WuppyCard(padding: 12) {
+        WuppyCard(padding: 12, isInteractive: true) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Text(goal.name)

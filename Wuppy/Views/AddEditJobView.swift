@@ -14,10 +14,12 @@ struct AddEditJobView: View {
     
     @AppStorage("defaultCurrency") private var defaultCurrency: String = "VND"
     
+    @Query(sort: \JobCategory.name) private var categories: [JobCategory]
+    
     @State private var title: String = ""
     @State private var clientName: String = ""
     @State private var jobDescription: String = ""
-    @State private var jobType: JobType = .other
+    @State private var selectedCategory: JobCategory?
     @State private var billingType: BillingType = .fixedPrice
     @State private var rate: Double?
     @State private var fixedPrice: Double?
@@ -34,7 +36,7 @@ struct AddEditJobView: View {
             _title = State(initialValue: job.title)
             _clientName = State(initialValue: job.clientName)
             _jobDescription = State(initialValue: job.jobDescription)
-            _jobType = State(initialValue: job.jobType)
+            _selectedCategory = State(initialValue: job.category)
             _billingType = State(initialValue: job.billingType)
             _rate = State(initialValue: job.rate)
             _fixedPrice = State(initialValue: job.fixedPrice)
@@ -44,9 +46,6 @@ struct AddEditJobView: View {
                 _deadline = State(initialValue: d)
                 _hasDeadline = State(initialValue: true)
             }
-        } else {
-            // Initialize with default currency from AppStorage, but we can't access @AppStorage in init directly easily for initialValue without some tricks or onAppear.
-            // A simpler way is to set it in onAppear if it's a new job.
         }
     }
     
@@ -74,12 +73,22 @@ struct AddEditJobView: View {
                                     .font(.caption)
                                     .fontWeight(.medium)
                                     .foregroundStyle(.secondary)
-                                Picker("", selection: $jobType) {
-                                    ForEach(JobType.allCases, id: \.self) { type in
-                                        Text(type.localizedName).tag(type)
+                                
+                                HStack {
+                                    Picker("", selection: $selectedCategory) {
+                                        Text("none").tag(nil as JobCategory?)
+                                        ForEach(categories) { category in
+                                            Text(category.name).tag(category as JobCategory?)
+                                        }
                                     }
+                                    .labelsHidden()
+                                    
+                                    NavigationLink(destination: CategoryManagerView()) {
+                                        Image(systemName: "plus.circle.fill")
+                                            .foregroundStyle(.blue)
+                                    }
+                                    .buttonStyle(.plain)
                                 }
-                                .labelsHidden()
                             }
                             
                             VStack(alignment: .leading, spacing: 8) {
@@ -224,7 +233,7 @@ struct AddEditJobView: View {
             job.title = title
             job.clientName = clientName
             job.jobDescription = jobDescription
-            job.jobType = jobType
+            job.category = selectedCategory
             job.billingType = billingType
             job.rate = rate
             job.fixedPrice = fixedPrice
@@ -236,7 +245,7 @@ struct AddEditJobView: View {
                 title: title,
                 clientName: clientName,
                 jobDescription: jobDescription,
-                jobType: jobType,
+                category: selectedCategory,
                 billingType: billingType,
                 rate: rate,
                 fixedPrice: fixedPrice,
