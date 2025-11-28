@@ -48,7 +48,9 @@
 // Common
 "cancel" = "Cancel";
 "save" = "Save";
+"edit" = "Edit";
 "details" = "Details";
+"description" = "Description";
 "notes" = "Notes";
 "dates" = "Dates";
 

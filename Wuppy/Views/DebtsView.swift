@@ -11,6 +11,7 @@ import SwiftData
 
 struct DebtsView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.locale) private var locale
     @Query(sort: \Debt.createdDate, order: .reverse) private var debts: [Debt]
     @State private var showingAddDebt = false
     @State private var selectedDebt: Debt?
@@ -36,11 +37,13 @@ struct DebtsView: View {
             NavigationStack {
                 AddEditDebtView()
             }
+            .environment(\.locale, locale)
         }
         .sheet(item: $selectedDebt) { debt in
              NavigationStack {
                  AddEditDebtView(debt: debt)
              }
+             .environment(\.locale, locale)
         }
     }
     

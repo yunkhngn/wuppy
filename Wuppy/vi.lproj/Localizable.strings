@@ -48,7 +48,9 @@
 // Common
 "cancel" = "Hủy";
 "save" = "Lưu";
+"edit" = "Sửa";
 "details" = "Chi tiết";
+"description" = "Mô tả";
 "notes" = "Ghi chú";
 "dates" = "Ngày tháng";
 

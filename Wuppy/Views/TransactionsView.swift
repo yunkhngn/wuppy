@@ -11,6 +11,7 @@ import SwiftData
 
 struct TransactionsView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.locale) private var locale
     @Query(sort: \Transaction.date, order: .reverse) private var transactions: [Transaction]
     @State private var showingAddTransaction = false
     @State private var selectedTransaction: Transaction?
@@ -36,11 +37,13 @@ struct TransactionsView: View {
             NavigationStack {
                 AddEditTransactionView()
             }
+            .environment(\.locale, locale)
         }
         .sheet(item: $selectedTransaction) { transaction in
              NavigationStack {
                  AddEditTransactionView(transaction: transaction)
              }
+             .environment(\.locale, locale)
         }
     }
     

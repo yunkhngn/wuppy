@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct JobDetailView: View {
+    @Environment(\.locale) private var locale
     @Bindable var job: Job
     @State private var showingEditJob = false
     
@@ -33,17 +34,17 @@ struct JobDetailView: View {
                 
                 // Info Grid
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
-                    InfoRow(label: "Type", value: job.jobType.rawValue)
-                    InfoRow(label: "Billing", value: job.billingType.rawValue)
+                    InfoRow(label: "job_type", value: job.jobType.rawValue)
+                    InfoRow(label: "billing", value: job.billingType.rawValue)
                     
                     if job.billingType == .fixedPrice {
-                        InfoRow(label: "Price", value: (job.fixedPrice ?? 0).formatted(.currency(code: "VND")))
+                        InfoRow(label: "fixed_price", value: (job.fixedPrice ?? 0).formatted(.currency(code: "VND")))
                     } else {
-                        InfoRow(label: "Rate", value: (job.rate ?? 0).formatted(.currency(code: "VND")) + "/hr")
+                        InfoRow(label: "hourly_rate", value: (job.rate ?? 0).formatted(.currency(code: "VND")) + "/hr")
                     }
                     
                     if let deadline = job.deadline {
-                        InfoRow(label: "Deadline", value: deadline.formatted(date: .long, time: .omitted))
+                        InfoRow(label: "deadline", value: deadline.formatted(date: .long, time: .omitted))
                     }
                 }
                 
@@ -52,7 +53,7 @@ struct JobDetailView: View {
                 // Description
                 if !job.jobDescription.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Description")
+                        Text("description")
                             .font(.headline)
                         Text(job.jobDescription)
                             .foregroundStyle(.secondary)
@@ -65,7 +66,7 @@ struct JobDetailView: View {
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button("Edit") {
+                Button("edit") {
                     showingEditJob = true
                 }
             }
@@ -74,12 +75,13 @@ struct JobDetailView: View {
             NavigationStack {
                 AddEditJobView(job: job)
             }
+            .environment(\.locale, locale)
         }
     }
 }
 
 struct InfoRow: View {
-    let label: String
+    let label: LocalizedStringKey
     let value: String
     
     var body: some View {

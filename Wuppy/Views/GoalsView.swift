@@ -11,6 +11,7 @@ import SwiftData
 
 struct GoalsView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.locale) private var locale
     @Query(sort: \Goal.createdDate, order: .reverse) private var goals: [Goal]
     @State private var showingAddGoal = false
     @State private var selectedGoal: Goal?
@@ -36,11 +37,13 @@ struct GoalsView: View {
             NavigationStack {
                 AddEditGoalView()
             }
+            .environment(\.locale, locale)
         }
         .sheet(item: $selectedGoal) { goal in
              NavigationStack {
                  AddEditGoalView(goal: goal)
              }
+             .environment(\.locale, locale)
         }
     }
     

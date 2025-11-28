@@ -11,6 +11,7 @@ import SwiftData
 
 struct JobsView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.locale) private var locale
     @Query(sort: \Job.createdDate, order: .reverse) private var jobs: [Job]
     @State private var showingAddJob = false
     @State private var selectedJob: Job?
@@ -36,6 +37,7 @@ struct JobsView: View {
             NavigationStack {
                 AddEditJobView()
             }
+            .environment(\.locale, locale)
         }
         .navigationDestination(for: Job.self) { job in
             JobDetailView(job: job)
