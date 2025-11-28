@@ -7,10 +7,46 @@
 
 import SwiftUI
 
+import SwiftData
+
 struct JobsView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \Job.createdDate, order: .reverse) private var jobs: [Job]
+    @State private var showingAddJob = false
+    @State private var selectedJob: Job?
+    
     var body: some View {
-        Text("jobs_title")
-            .font(.largeTitle)
-            .navigationTitle("jobs_title")
+        List(selection: $selectedJob) {
+            ForEach(jobs) { job in
+                NavigationLink(value: job) {
+                    JobRowView(job: job)
+                }
+            }
+            .onDelete(perform: deleteJobs)
+        }
+        .navigationTitle("jobs_title")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: { showingAddJob = true }) {
+                    Label("Add Job", systemImage: "plus")
+                }
+            }
+        }
+        .sheet(isPresented: $showingAddJob) {
+            NavigationStack {
+                AddEditJobView()
+            }
+        }
+        .navigationDestination(for: Job.self) { job in
+            JobDetailView(job: job)
+        }
+    }
+    
+    private func deleteJobs(offsets: IndexSet) {
+        withAnimation {
+            for index in offsets {
+                modelContext.delete(jobs[index])
+            }
+        }
     }
 }
