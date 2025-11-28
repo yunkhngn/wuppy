@@ -10,6 +10,10 @@ import SwiftData
 
 @main
 struct WuppyApp: App {
+    init() {
+        NotificationManager.shared.requestAuthorization()
+    }
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,

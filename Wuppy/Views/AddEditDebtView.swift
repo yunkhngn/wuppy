@@ -105,6 +105,7 @@ struct AddEditDebtView: View {
                 notes: notes
             )
             modelContext.insert(newDebt)
+            NotificationManager.shared.scheduleDebtDueDateNotification(debt: newDebt)
         }
         dismiss()
     }

@@ -129,6 +129,7 @@ struct AddEditJobView: View {
                 status: status
             )
             modelContext.insert(newJob)
+            NotificationManager.shared.scheduleJobDeadlineNotification(job: newJob)
         }
         dismiss()
     }
