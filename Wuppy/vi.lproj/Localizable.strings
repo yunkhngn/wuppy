@@ -53,6 +53,8 @@
 "description" = "Mô tả";
 "notes" = "Ghi chú";
 "dates" = "Ngày tháng";
+"currency" = "Tiền tệ";
+"default_currency" = "Tiền tệ mặc định";
 
 // Add/Edit Job
 "new_job" = "Công việc mới";

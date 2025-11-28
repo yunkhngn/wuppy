@@ -12,6 +12,8 @@ struct AddEditJobView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
+    @AppStorage("defaultCurrency") private var defaultCurrency: String = "VND"
+    
     @State private var title: String = ""
     @State private var clientName: String = ""
     @State private var jobDescription: String = ""
@@ -19,6 +21,7 @@ struct AddEditJobView: View {
     @State private var billingType: BillingType = .fixedPrice
     @State private var rate: Double?
     @State private var fixedPrice: Double?
+    @State private var currency: String = "VND"
     @State private var status: JobStatus = .draft
     @State private var deadline: Date = Date().addingTimeInterval(86400 * 7)
     @State private var hasDeadline: Bool = false
@@ -35,11 +38,15 @@ struct AddEditJobView: View {
             _billingType = State(initialValue: job.billingType)
             _rate = State(initialValue: job.rate)
             _fixedPrice = State(initialValue: job.fixedPrice)
+            _currency = State(initialValue: job.currency)
             _status = State(initialValue: job.status)
             if let d = job.deadline {
                 _deadline = State(initialValue: d)
                 _hasDeadline = State(initialValue: true)
             }
+        } else {
+            // Initialize with default currency from AppStorage, but we can't access @AppStorage in init directly easily for initialValue without some tricks or onAppear.
+            // A simpler way is to set it in onAppear if it's a new job.
         }
     }
     
@@ -67,10 +74,16 @@ struct AddEditJobView: View {
                     }
                 }
                 
+                Picker("currency", selection: $currency) {
+                    Text("VND").tag("VND")
+                    Text("USD").tag("USD")
+                }
+                .pickerStyle(.segmented)
+                
                 if billingType == .fixedPrice {
-                    TextField("fixed_price", value: $fixedPrice, format: .currency(code: "VND"))
+                    TextField("fixed_price", value: $fixedPrice, format: .currency(code: currency))
                 } else {
-                    TextField("hourly_rate", value: $rate, format: .currency(code: "VND"))
+                    TextField("hourly_rate", value: $rate, format: .currency(code: currency))
                 }
             }
             
@@ -101,6 +114,11 @@ struct AddEditJobView: View {
                 .disabled(title.isEmpty || clientName.isEmpty)
             }
         }
+        .onAppear {
+            if jobToEdit == nil {
+                currency = defaultCurrency
+            }
+        }
         .padding()
         .frame(minWidth: 400, minHeight: 500)
     }
@@ -114,6 +132,7 @@ struct AddEditJobView: View {
             job.billingType = billingType
             job.rate = rate
             job.fixedPrice = fixedPrice
+            job.currency = currency
             job.status = status
             job.deadline = hasDeadline ? deadline : nil
         } else {
@@ -125,6 +144,7 @@ struct AddEditJobView: View {
                 billingType: billingType,
                 rate: rate,
                 fixedPrice: fixedPrice,
+                currency: currency,
                 deadline: hasDeadline ? deadline : nil,
                 status: status
             )

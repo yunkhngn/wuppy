@@ -12,9 +12,12 @@ struct AddEditDebtView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
+    @AppStorage("defaultCurrency") private var defaultCurrency: String = "VND"
+    
     @State private var personName: String = ""
     @State private var role: DebtRole = .iOwe
     @State private var principalAmount: Double = 0
+    @State private var currency: String = "VND"
     @State private var interestRate: Double?
     @State private var dueDate: Date = Date().addingTimeInterval(86400 * 30)
     @State private var hasDueDate: Bool = false
@@ -28,6 +31,7 @@ struct AddEditDebtView: View {
             _personName = State(initialValue: debt.personName)
             _role = State(initialValue: debt.role)
             _principalAmount = State(initialValue: debt.principalAmount)
+            _currency = State(initialValue: debt.currency)
             _interestRate = State(initialValue: debt.interestRate)
             if let d = debt.dueDate {
                 _dueDate = State(initialValue: d)
@@ -46,7 +50,14 @@ struct AddEditDebtView: View {
                         Text(role.rawValue).tag(role)
                     }
                 }
-                TextField("amount", value: $principalAmount, format: .currency(code: "VND"))
+                
+                Picker("currency", selection: $currency) {
+                    Text("VND").tag("VND")
+                    Text("USD").tag("USD")
+                }
+                .pickerStyle(.segmented)
+                
+                TextField("amount", value: $principalAmount, format: .currency(code: currency))
                 TextField("interest_rate", value: $interestRate, format: .number)
             }
             
@@ -77,6 +88,11 @@ struct AddEditDebtView: View {
                 .disabled(personName.isEmpty || principalAmount <= 0)
             }
         }
+        .onAppear {
+            if debtToEdit == nil {
+                currency = defaultCurrency
+            }
+        }
         .padding()
         .frame(minWidth: 400, minHeight: 400)
     }
@@ -86,6 +102,7 @@ struct AddEditDebtView: View {
             debt.personName = personName
             debt.role = role
             debt.principalAmount = principalAmount
+            debt.currency = currency
             debt.interestRate = interestRate
             debt.dueDate = hasDueDate ? dueDate : nil
             debt.notes = notes
@@ -99,6 +116,7 @@ struct AddEditDebtView: View {
                 personName: personName,
                 role: role,
                 principalAmount: principalAmount,
+                currency: currency,
                 interestRate: interestRate,
                 dueDate: hasDueDate ? dueDate : nil,
                 remainingAmount: principalAmount,

@@ -15,12 +15,14 @@ final class Goal {
     var currentAmount: Double
     var createdDate: Date
     var targetDate: Date?
+    var currency: String
     var notes: String
     
-    init(name: String, targetAmount: Double, currentAmount: Double = 0, createdDate: Date = Date(), targetDate: Date? = nil, notes: String = "") {
+    init(name: String, targetAmount: Double, currentAmount: Double = 0, currency: String = "VND", createdDate: Date = Date(), targetDate: Date? = nil, notes: String = "") {
         self.name = name
         self.targetAmount = targetAmount
         self.currentAmount = currentAmount
+        self.currency = currency
         self.createdDate = createdDate
         self.targetDate = targetDate
         self.notes = notes

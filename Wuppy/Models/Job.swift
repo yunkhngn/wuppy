@@ -49,13 +49,14 @@ final class Job {
     var deadline: Date?
     var paymentDueDate: Date?
     var status: JobStatus
+    var currency: String
     var notes: String
     var tags: [String]
     
     @Relationship(deleteRule: .cascade) var timeSessions: [TimeSession]?
     @Relationship(deleteRule: .nullify) var transactions: [Transaction]?
     
-    init(title: String, clientName: String, jobDescription: String = "", jobType: JobType = .other, billingType: BillingType = .fixedPrice, rate: Double? = nil, fixedPrice: Double? = nil, depositAmount: Double = 0, totalReceivedAmount: Double = 0, createdDate: Date = Date(), startDate: Date? = nil, deadline: Date? = nil, paymentDueDate: Date? = nil, status: JobStatus = .draft, notes: String = "", tags: [String] = []) {
+    init(title: String, clientName: String, jobDescription: String = "", jobType: JobType = .other, billingType: BillingType = .fixedPrice, rate: Double? = nil, fixedPrice: Double? = nil, currency: String = "VND", depositAmount: Double = 0, totalReceivedAmount: Double = 0, createdDate: Date = Date(), startDate: Date? = nil, deadline: Date? = nil, paymentDueDate: Date? = nil, status: JobStatus = .draft, notes: String = "", tags: [String] = []) {
         self.title = title
         self.clientName = clientName
         self.jobDescription = jobDescription
@@ -63,6 +64,7 @@ final class Job {
         self.billingType = billingType
         self.rate = rate
         self.fixedPrice = fixedPrice
+        self.currency = currency
         self.depositAmount = depositAmount
         self.totalReceivedAmount = totalReceivedAmount
         self.createdDate = createdDate

@@ -53,6 +53,8 @@
 "description" = "Description";
 "notes" = "Notes";
 "dates" = "Dates";
+"currency" = "Currency";
+"default_currency" = "Default Currency";
 
 // Add/Edit Job
 "new_job" = "New Job";

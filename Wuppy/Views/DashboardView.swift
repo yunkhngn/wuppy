@@ -15,24 +15,24 @@ struct DashboardView: View {
     @Query private var debts: [Debt]
     @Query private var jobs: [Job]
     
-    var totalIncome: Double {
-        transactions.filter { $0.type == .income }.reduce(0) { $0 + $1.amount }
+    var incomeByCurrency: [String: Double] {
+        Dictionary(grouping: transactions.filter { $0.type == .income }, by: { $0.currency })
+            .mapValues { $0.reduce(0) { $0 + $1.amount } }
     }
     
-    var totalExpenses: Double {
-        transactions.filter { $0.type == .expense }.reduce(0) { $0 + $1.amount }
+    var expensesByCurrency: [String: Double] {
+        Dictionary(grouping: transactions.filter { $0.type == .expense }, by: { $0.currency })
+            .mapValues { $0.reduce(0) { $0 + $1.amount } }
     }
     
-    var netResult: Double {
-        totalIncome - totalExpenses
+    var debtIOweByCurrency: [String: Double] {
+        Dictionary(grouping: debts.filter { $0.role == .iOwe }, by: { $0.currency })
+            .mapValues { $0.reduce(0) { $0 + $1.remainingAmount } }
     }
     
-    var totalDebtIOwe: Double {
-        debts.filter { $0.role == .iOwe }.reduce(0) { $0 + $1.remainingAmount }
-    }
-    
-    var totalDebtOwedToMe: Double {
-        debts.filter { $0.role == .theyOweMe }.reduce(0) { $0 + $1.remainingAmount }
+    var debtOwedToMeByCurrency: [String: Double] {
+        Dictionary(grouping: debts.filter { $0.role == .theyOweMe }, by: { $0.currency })
+            .mapValues { $0.reduce(0) { $0 + $1.remainingAmount } }
     }
     
     var body: some View {
@@ -43,10 +43,19 @@ struct DashboardView: View {
                     .bold()
                 
                 // Summary Cards
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))], spacing: 20) {
-                    SummaryCard(title: "total_income", amount: totalIncome, color: .green)
-                    SummaryCard(title: "total_expenses", amount: totalExpenses, color: .red)
-                    SummaryCard(title: "net_result", amount: netResult, color: netResult >= 0 ? .blue : .orange)
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 200))], spacing: 20) {
+                    MultiCurrencySummaryCard(title: "total_income", amounts: incomeByCurrency, color: .green)
+                    MultiCurrencySummaryCard(title: "total_expenses", amounts: expensesByCurrency, color: .red)
+                    
+                    // Net Result Calculation
+                    let currencies = Set(incomeByCurrency.keys).union(expensesByCurrency.keys)
+                    let netResult: [String: Double] = currencies.reduce(into: [:]) { dict, currency in
+                        let income = incomeByCurrency[currency] ?? 0
+                        let expense = expensesByCurrency[currency] ?? 0
+                        dict[currency] = income - expense
+                    }
+                    
+                    MultiCurrencySummaryCard(title: "net_result", amounts: netResult, color: .blue)
                 }
                 
                 Divider()
@@ -55,9 +64,9 @@ struct DashboardView: View {
                     .font(.title2)
                     .bold()
                 
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))], spacing: 20) {
-                    SummaryCard(title: "i_owe", amount: totalDebtIOwe, color: .red)
-                    SummaryCard(title: "they_owe_me", amount: totalDebtOwedToMe, color: .green)
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 200))], spacing: 20) {
+                    MultiCurrencySummaryCard(title: "i_owe", amounts: debtIOweByCurrency, color: .red)
+                    MultiCurrencySummaryCard(title: "they_owe_me", amounts: debtOwedToMeByCurrency, color: .green)
                 }
                 
                 Divider()
@@ -73,9 +82,9 @@ struct DashboardView: View {
     }
 }
 
-struct SummaryCard: View {
+struct MultiCurrencySummaryCard: View {
     let title: LocalizedStringKey
-    let amount: Double
+    let amounts: [String: Double]
     let color: Color
     
     var body: some View {
@@ -83,10 +92,20 @@ struct SummaryCard: View {
             Text(title)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text(amount, format: .currency(code: "VND"))
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundStyle(color)
+            
+            if amounts.isEmpty {
+                Text(0, format: .currency(code: "VND"))
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundStyle(color)
+            } else {
+                ForEach(amounts.sorted(by: { $0.key < $1.key }), id: \.key) { currency, amount in
+                    Text(amount, format: .currency(code: currency))
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundStyle(color)
+                }
+            }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)

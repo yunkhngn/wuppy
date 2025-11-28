@@ -23,7 +23,7 @@ struct DebtRowView: View {
             Spacer()
             
             VStack(alignment: .trailing) {
-                Text(debt.remainingAmount, format: .currency(code: "VND"))
+                Text(debt.remainingAmount, format: .currency(code: debt.currency))
                     .font(.body)
                     .fontWeight(.semibold)
                 

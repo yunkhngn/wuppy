@@ -24,11 +24,11 @@ struct GoalRowView: View {
             ProgressView(value: goal.currentAmount, total: goal.targetAmount)
             
             HStack {
-                Text(goal.currentAmount, format: .currency(code: "VND"))
+                Text(goal.currentAmount, format: .currency(code: goal.currency))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Spacer()
-                Text(goal.targetAmount, format: .currency(code: "VND"))
+                Text(goal.targetAmount, format: .currency(code: goal.currency))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

@@ -12,11 +12,14 @@ struct AddEditTransactionView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
+    @AppStorage("defaultCurrency") private var defaultCurrency: String = "VND"
+    
     @Query(sort: \Job.createdDate, order: .reverse) private var jobs: [Job]
     
     @State private var type: TransactionType = .expense
     @State private var category: String = ""
     @State private var amount: Double = 0
+    @State private var currency: String = "VND"
     @State private var date: Date = Date()
     @State private var note: String = ""
     @State private var selectedJob: Job?
@@ -29,6 +32,7 @@ struct AddEditTransactionView: View {
             _type = State(initialValue: transaction.type)
             _category = State(initialValue: transaction.category)
             _amount = State(initialValue: transaction.amount)
+            _currency = State(initialValue: transaction.currency)
             _date = State(initialValue: transaction.date)
             _note = State(initialValue: transaction.note)
             _selectedJob = State(initialValue: transaction.job)
@@ -45,7 +49,13 @@ struct AddEditTransactionView: View {
                 }
                 .pickerStyle(.segmented)
                 
-                TextField("amount", value: $amount, format: .currency(code: "VND"))
+                Picker("currency", selection: $currency) {
+                    Text("VND").tag("VND")
+                    Text("USD").tag("USD")
+                }
+                .pickerStyle(.segmented)
+                
+                TextField("amount", value: $amount, format: .currency(code: currency))
                 
                 TextField("category", text: $category) // Could be a picker with predefined categories later
                 
@@ -81,6 +91,11 @@ struct AddEditTransactionView: View {
                 .disabled(amount <= 0 || category.isEmpty)
             }
         }
+        .onAppear {
+            if transactionToEdit == nil {
+                currency = defaultCurrency
+            }
+        }
         .padding()
         .frame(minWidth: 400, minHeight: 400)
     }
@@ -90,6 +105,7 @@ struct AddEditTransactionView: View {
             transaction.type = type
             transaction.category = category
             transaction.amount = amount
+            transaction.currency = currency
             transaction.date = date
             transaction.note = note
             transaction.job = selectedJob
@@ -99,6 +115,7 @@ struct AddEditTransactionView: View {
                 category: category,
                 amount: amount,
                 date: date,
+                currency: currency,
                 note: note
             )
             newTransaction.job = selectedJob

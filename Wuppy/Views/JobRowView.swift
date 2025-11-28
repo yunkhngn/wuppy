@@ -28,9 +28,15 @@ struct JobRowView: View {
                 
                 if let deadline = job.deadline {
                     Text(deadline, style: .date)
-                        .font(.caption)
-                        .foregroundStyle(deadline < Date() ? .red : .secondary)
+                    .font(.caption)
+                    .foregroundStyle(deadline < Date() ? .red : .secondary)
                 }
+            }
+            
+            HStack {
+                Text(job.remainingAmount, format: .currency(code: job.currency))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
         .padding(.vertical, 4)

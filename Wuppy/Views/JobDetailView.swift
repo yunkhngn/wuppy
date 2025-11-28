@@ -38,9 +38,9 @@ struct JobDetailView: View {
                     InfoRow(label: "billing", value: job.billingType.rawValue)
                     
                     if job.billingType == .fixedPrice {
-                        InfoRow(label: "fixed_price", value: (job.fixedPrice ?? 0).formatted(.currency(code: "VND")))
+                        InfoRow(label: "fixed_price", value: (job.fixedPrice ?? 0).formatted(.currency(code: job.currency)))
                     } else {
-                        InfoRow(label: "hourly_rate", value: (job.rate ?? 0).formatted(.currency(code: "VND")) + "/hr")
+                        InfoRow(label: "hourly_rate", value: (job.rate ?? 0).formatted(.currency(code: job.currency)) + "/hr")
                     }
                     
                     if let deadline = job.deadline {
