@@ -213,3 +213,45 @@ struct MultiCurrencySummaryCard<G: View>: View {
         }
     }
 }
+
+struct GoalDashboardCard: View {
+    let goal: Goal
+    
+    var body: some View {
+        WuppyCard(padding: 16, isInteractive: true) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text(goal.name)
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .lineLimit(1)
+                    Spacer()
+                    Text(goal.progress, format: .percent.precision(.fractionLength(0)))
+                        .font(.caption)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.blue)
+                        .clipShape(Capsule())
+                }
+                
+                ProgressView(value: goal.currentAmount, total: goal.targetAmount)
+                    .tint(.blue)
+                
+                HStack {
+                    Text(goal.currentAmount, format: .currency(code: goal.currency))
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(goal.targetAmount, format: .currency(code: goal.currency))
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .frame(width: 250)
+        }
+    }
+}

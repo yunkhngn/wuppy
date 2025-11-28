@@ -104,6 +104,7 @@ struct AddEditDebtView: View {
                                 .datePickerStyle(.graphical)
                         }
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .padding(.horizontal)
                 
