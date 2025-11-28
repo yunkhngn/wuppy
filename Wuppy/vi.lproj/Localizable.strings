@@ -1,0 +1,40 @@
+/* 
+  Localizable.strings
+  Wuppy
+
+  Created by Wuppy AI on 29/11/2025.
+*/
+
+"app_name" = "Wuppy";
+
+// Dashboard
+"dashboard_title" = "Tổng quan";
+"total_income" = "Tổng thu nhập";
+"total_expenses" = "Tổng chi tiêu";
+"net_result" = "Kết quả ròng";
+"available_money" = "Tiền khả dụng";
+
+// Jobs
+"jobs_title" = "Công việc";
+"add_job" = "Thêm công việc";
+"job_status_draft" = "Nháp";
+"job_status_in_progress" = "Đang làm";
+"job_status_paid" = "Đã thanh toán";
+
+// Debts
+"debts_title" = "Sổ nợ";
+"i_owe" = "Tôi nợ";
+"they_owe_me" = "Nợ tôi";
+
+// Transactions
+"transactions_title" = "Giao dịch";
+"income" = "Thu nhập";
+"expense" = "Chi tiêu";
+
+// Goals
+"goals_title" = "Mục tiêu";
+"add_goal" = "Thêm mục tiêu";
+
+// Settings
+"settings_title" = "Cài đặt";
+"enable_icloud_sync" = "Bật đồng bộ iCloud";

@@ -1,0 +1,40 @@
+/* 
+  Localizable.strings
+  Wuppy
+
+  Created by Wuppy AI on 29/11/2025.
+*/
+
+"app_name" = "Wuppy";
+
+// Dashboard
+"dashboard_title" = "Dashboard";
+"total_income" = "Total Income";
+"total_expenses" = "Total Expenses";
+"net_result" = "Net Result";
+"available_money" = "Available Money";
+
+// Jobs
+"jobs_title" = "Jobs";
+"add_job" = "Add Job";
+"job_status_draft" = "Draft";
+"job_status_in_progress" = "In Progress";
+"job_status_paid" = "Paid";
+
+// Debts
+"debts_title" = "Debts";
+"i_owe" = "I Owe";
+"they_owe_me" = "They Owe Me";
+
+// Transactions
+"transactions_title" = "Transactions";
+"income" = "Income";
+"expense" = "Expense";
+
+// Goals
+"goals_title" = "Goals";
+"add_goal" = "Add Goal";
+
+// Settings
+"settings_title" = "Settings";
+"enable_icloud_sync" = "Enable iCloud Sync";
