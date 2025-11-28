@@ -75,6 +75,7 @@ struct DebtsView: View {
             NavigationStack {
                 AddEditDebtView(debt: selectedDebt)
             }
+            .id(selectedDebt?.id)
             .environment(\.locale, locale)
             .inspectorColumnWidth(min: 400, ideal: 500, max: 600)
         }

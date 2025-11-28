@@ -121,6 +121,7 @@
 "link_to_job" = "Link to Job";
 "link_to_goal" = "Link to Goal";
 "no_goals" = "No active goals";
+"mark_as_paid" = "Mark as Paid";
 
 // Enums - Job Status
 "job_status_draft" = "Draft";

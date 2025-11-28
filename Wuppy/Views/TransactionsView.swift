@@ -75,6 +75,7 @@ struct TransactionsView: View {
             NavigationStack {
                 AddEditTransactionView(transaction: selectedTransaction)
             }
+            .id(selectedTransaction?.id)
             .environment(\.locale, locale)
             .inspectorColumnWidth(min: 400, ideal: 500, max: 600)
         }

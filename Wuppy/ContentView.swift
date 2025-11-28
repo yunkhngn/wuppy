@@ -19,13 +19,21 @@ struct ContentView: View {
             case .dashboard:
                 DashboardView()
             case .jobs:
-                JobsView()
+                NavigationStack {
+                    JobsView()
+                }
             case .debts:
-                DebtsView()
+                NavigationStack {
+                    DebtsView()
+                }
             case .transactions:
-                TransactionsView()
+                NavigationStack {
+                    TransactionsView()
+                }
             case .goals:
-                GoalsView()
+                NavigationStack {
+                    GoalsView()
+                }
             case .settings:
                 NavigationStack {
                     SettingsView()

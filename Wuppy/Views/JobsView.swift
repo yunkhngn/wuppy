@@ -37,6 +37,16 @@ struct JobsView: View {
                         
                         Divider()
                         
+                        if job.status != .paid && job.remainingAmount > 0 {
+                            Button {
+                                markAsPaid(job)
+                            } label: {
+                                Label("mark_as_paid", systemImage: "banknote.fill")
+                            }
+                        }
+                        
+                        Divider()
+                        
                         Menu("job_status") {
                             ForEach(JobStatus.allCases, id: \.self) { status in
                                 Button {
@@ -91,6 +101,7 @@ struct JobsView: View {
             NavigationStack {
                 AddEditJobView(job: selectedJob)
             }
+            .id(selectedJob?.id)
             .environment(\.locale, locale)
             .inspectorColumnWidth(min: 400, ideal: 500, max: 600)
         }
@@ -103,5 +114,20 @@ struct JobsView: View {
                 modelContext.delete(jobs[index])
             }
         }
+    }
+    
+    private func markAsPaid(_ job: Job) {
+        let transaction = Transaction(
+            type: .income,
+            category: "Job Payment",
+            amount: job.remainingAmount,
+            date: Date(),
+            currency: job.currency,
+            note: "Payment for \(job.title)"
+        )
+        transaction.job = job
+        modelContext.insert(transaction)
+        
+        job.status = .paid
     }
 }

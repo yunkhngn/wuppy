@@ -14,7 +14,6 @@ struct AddEditTransactionView: View {
     
     @AppStorage("defaultCurrency") private var defaultCurrency: String = "VND"
     
-    @Query(sort: \Job.createdDate, order: .reverse) private var jobs: [Job]
     @Query(sort: \Goal.createdDate, order: .reverse) private var goals: [Goal]
     
     @State private var type: TransactionType = .expense
@@ -23,7 +22,6 @@ struct AddEditTransactionView: View {
     @State private var currency: String = "VND"
     @State private var date: Date = Date()
     @State private var note: String = ""
-    @State private var selectedJob: Job?
     @State private var selectedGoal: Goal?
     
     var transactionToEdit: Transaction?
@@ -37,7 +35,6 @@ struct AddEditTransactionView: View {
             _currency = State(initialValue: transaction.currency)
             _date = State(initialValue: transaction.date)
             _note = State(initialValue: transaction.note)
-            _selectedJob = State(initialValue: transaction.job)
             _selectedGoal = State(initialValue: transaction.goal)
         }
     }
@@ -108,22 +105,6 @@ struct AddEditTransactionView: View {
                     WuppyCard {
                         VStack(alignment: .leading, spacing: 16) {
                             WuppySectionHeader(title: "links", icon: "link")
-                            
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("link_to_job")
-                                    .font(.caption)
-                                    .fontWeight(.medium)
-                                    .foregroundStyle(.secondary)
-                                Picker("", selection: $selectedJob) {
-                                    Text("none").tag(nil as Job?)
-                                    ForEach(jobs) { job in
-                                        Text(job.title).tag(job as Job?)
-                                    }
-                                }
-                                .labelsHidden()
-                            }
-                            
-                            Divider()
                             
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("link_to_goal")
@@ -219,7 +200,6 @@ struct AddEditTransactionView: View {
             transaction.currency = currency
             transaction.date = date
             transaction.note = note
-            transaction.job = selectedJob
             transaction.goal = selectedGoal
         } else {
             let newTransaction = Transaction(
@@ -230,7 +210,6 @@ struct AddEditTransactionView: View {
                 currency: currency,
                 note: note
             )
-            newTransaction.job = selectedJob
             newTransaction.goal = selectedGoal
             modelContext.insert(newTransaction)
         }

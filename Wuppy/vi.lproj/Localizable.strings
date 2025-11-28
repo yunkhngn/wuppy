@@ -121,6 +121,7 @@
 "link_to_job" = "Gắn với Công việc";
 "link_to_goal" = "Gắn với Mục tiêu";
 "no_goals" = "Chưa có mục tiêu nào";
+"mark_as_paid" = "Đánh dấu đã thanh toán";
 
 // Enums - Job Status
 "job_status_draft" = "Nháp";

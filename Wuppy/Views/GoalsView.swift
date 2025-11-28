@@ -75,6 +75,7 @@ struct GoalsView: View {
             NavigationStack {
                 AddEditGoalView(goal: selectedGoal)
             }
+            .id(selectedGoal?.id)
             .environment(\.locale, locale)
             .inspectorColumnWidth(min: 400, ideal: 500, max: 600)
         }
