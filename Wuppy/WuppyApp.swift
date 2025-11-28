@@ -33,5 +33,11 @@ struct WuppyApp: App {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
+        
+        MenuBarExtra("Wuppy", systemImage: "banknote") {
+            MenuBarView()
+                .modelContainer(sharedModelContainer)
+        }
+        .menuBarExtraStyle(.window)
     }
 }
