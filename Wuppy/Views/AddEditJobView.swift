@@ -51,56 +51,134 @@ struct AddEditJobView: View {
     }
     
     var body: some View {
-        Form {
-            Section("job_details") {
-                TextField("job_title_label", text: $title)
-                TextField("client_name", text: $clientName)
-                Picker("job_type", selection: $jobType) {
-                    ForEach(JobType.allCases, id: \.self) { type in
-                        Text(type.rawValue).tag(type)
-                    }
-                }
-                Picker("job_status", selection: $status) {
-                    ForEach(JobStatus.allCases, id: \.self) { status in
-                        Text(status.rawValue).tag(status)
-                    }
-                }
-            }
-            
-            Section("billing") {
-                Picker("billing_type", selection: $billingType) {
-                    ForEach(BillingType.allCases, id: \.self) { type in
-                        Text(type.rawValue).tag(type)
-                    }
-                }
+        ScrollView {
+            VStack(spacing: 24) {
+                // Header
+                Text(jobToEdit == nil ? "new_job" : "edit_job")
+                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                    .padding(.top)
                 
-                Picker("currency", selection: $currency) {
-                    Text("VND").tag("VND")
-                    Text("USD").tag("USD")
+                // Job Details Section
+                WuppyCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        WuppySectionHeader(title: "job_details", icon: "briefcase.fill")
+                        
+                        WuppyTextField(title: "job_title_label", text: $title, icon: "text.alignleft")
+                        WuppyTextField(title: "client_name", text: $clientName, icon: "person.fill")
+                        
+                        HStack(spacing: 16) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("job_type")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.secondary)
+                                Picker("", selection: $jobType) {
+                                    ForEach(JobType.allCases, id: \.self) { type in
+                                        Text(type.rawValue).tag(type)
+                                    }
+                                }
+                                .labelsHidden()
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("job_status")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.secondary)
+                                Picker("", selection: $status) {
+                                    ForEach(JobStatus.allCases, id: \.self) { status in
+                                        Text(status.rawValue).tag(status)
+                                    }
+                                }
+                                .labelsHidden()
+                            }
+                        }
+                    }
                 }
-                .pickerStyle(.segmented)
+                .padding(.horizontal)
                 
-                if billingType == .fixedPrice {
-                    TextField("fixed_price", value: $fixedPrice, format: .currency(code: currency))
-                } else {
-                    TextField("hourly_rate", value: $rate, format: .currency(code: currency))
+                // Billing Section
+                WuppyCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        WuppySectionHeader(title: "billing", icon: "banknote.fill")
+                        
+                        HStack(spacing: 16) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("billing_type")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.secondary)
+                                Picker("", selection: $billingType) {
+                                    ForEach(BillingType.allCases, id: \.self) { type in
+                                        Text(type.rawValue).tag(type)
+                                    }
+                                }
+                                .labelsHidden()
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("currency")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.secondary)
+                                Picker("", selection: $currency) {
+                                    Text("VND").tag("VND")
+                                    Text("USD").tag("USD")
+                                }
+                                .labelsHidden()
+                                .pickerStyle(.segmented)
+                            }
+                        }
+                        
+                        if billingType == .fixedPrice {
+                            WuppyNumberField(title: "fixed_price", value: Binding(get: { fixedPrice ?? 0 }, set: { fixedPrice = $0 }), format: .currency(code: currency), icon: "dollarsign.circle")
+                        } else {
+                            WuppyNumberField(title: "hourly_rate", value: Binding(get: { rate ?? 0 }, set: { rate = $0 }), format: .currency(code: currency), icon: "clock")
+                        }
+                    }
                 }
-            }
-            
-            Section("dates") {
-                Toggle("has_deadline", isOn: $hasDeadline)
-                if hasDeadline {
-                    DatePicker("deadline", selection: $deadline, displayedComponents: .date)
+                .padding(.horizontal)
+                
+                // Dates Section
+                WuppyCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        WuppySectionHeader(title: "dates", icon: "calendar")
+                        
+                        Toggle("has_deadline", isOn: $hasDeadline)
+                            .toggleStyle(.switch)
+                        
+                        if hasDeadline {
+                            DatePicker("deadline", selection: $deadline, displayedComponents: .date)
+                                .datePickerStyle(.graphical)
+                        }
+                    }
                 }
-            }
-            
-            Section("notes") {
-                TextEditor(text: $jobDescription)
-                    .frame(minHeight: 100)
+                .padding(.horizontal)
+                
+                // Notes Section
+                WuppyCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        WuppySectionHeader(title: "notes", icon: "note.text")
+                        
+                        TextEditor(text: $jobDescription)
+                            .frame(minHeight: 100)
+                            .padding(8)
+                            .background(Color(nsColor: .controlBackgroundColor))
+                            .cornerRadius(8)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+                            )
+                    }
+                }
+                .padding(.horizontal)
+                
+                Spacer().frame(height: 20)
             }
         }
-        .formStyle(.grouped)
-        .navigationTitle(jobToEdit == nil ? "new_job" : "edit_job")
+        .background(Color(nsColor: .windowBackgroundColor))
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("cancel") {
@@ -111,6 +189,7 @@ struct AddEditJobView: View {
                 Button("save") {
                     save()
                 }
+                .buttonStyle(.borderedProminent)
                 .disabled(title.isEmpty || clientName.isEmpty)
             }
         }
@@ -119,8 +198,7 @@ struct AddEditJobView: View {
                 currency = defaultCurrency
             }
         }
-        .padding()
-        .frame(minWidth: 400, minHeight: 500)
+        .frame(minWidth: 500, minHeight: 600)
     }
     
     private func save() {

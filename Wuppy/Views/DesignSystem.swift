@@ -1,0 +1,120 @@
+import SwiftUI
+
+// MARK: - Colors & Gradients
+struct WuppyColor {
+    static let cardBackground = Color("CardBackground") // We will need to define this in Assets or use system materials
+    static let primary = Color.accentColor
+    static let secondary = Color.secondary
+    
+    // Gradients
+    static let incomeGradient = LinearGradient(colors: [.green.opacity(0.8), .green.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing)
+    static let expenseGradient = LinearGradient(colors: [.red.opacity(0.8), .red.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing)
+    static let netResultGradient = LinearGradient(colors: [.blue.opacity(0.8), .purple.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing)
+    static let cardGradient = LinearGradient(colors: [Color(nsColor: .controlBackgroundColor).opacity(0.8), Color(nsColor: .controlBackgroundColor).opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing)
+}
+
+// MARK: - Components
+
+struct WuppyCard<Content: View>: View {
+    var content: Content
+    var padding: CGFloat = 16
+    
+    init(padding: CGFloat = 16, @ViewBuilder content: () -> Content) {
+        self.padding = padding
+        self.content = content()
+    }
+    
+    var body: some View {
+        content
+            .padding(padding)
+            .background(.ultraThinMaterial)
+            .cornerRadius(16)
+            .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(.white.opacity(0.2), lineWidth: 1)
+            )
+    }
+}
+
+struct WuppyTextField: View {
+    let title: LocalizedStringKey
+    @Binding var text: String
+    var icon: String? = nil
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.caption)
+                .fontWeight(.medium)
+                .foregroundStyle(.secondary)
+            
+            HStack {
+                if let icon = icon {
+                    Image(systemName: icon)
+                        .foregroundStyle(.secondary)
+                        .frame(width: 20)
+                }
+                TextField("", text: $text)
+                    .textFieldStyle(.plain)
+            }
+            .padding(12)
+            .background(Color(nsColor: .controlBackgroundColor))
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+            )
+        }
+    }
+}
+
+struct WuppyNumberField: View {
+    let title: LocalizedStringKey
+    @Binding var value: Double
+    var format: FloatingPointFormatStyle<Double>.Currency
+    var icon: String? = nil
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.caption)
+                .fontWeight(.medium)
+                .foregroundStyle(.secondary)
+            
+            HStack {
+                if let icon = icon {
+                    Image(systemName: icon)
+                        .foregroundStyle(.secondary)
+                        .frame(width: 20)
+                }
+                TextField("", value: $value, format: format)
+                    .textFieldStyle(.plain)
+            }
+            .padding(12)
+            .background(Color(nsColor: .controlBackgroundColor))
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+            )
+        }
+    }
+}
+
+struct WuppySectionHeader: View {
+    let title: LocalizedStringKey
+    let icon: String
+    
+    var body: some View {
+        HStack {
+            Image(systemName: icon)
+                .foregroundStyle(.blue)
+            Text(title)
+                .font(.headline)
+                .fontWeight(.semibold)
+        }
+        .padding(.bottom, 8)
+        .padding(.top, 16)
+    }
+}
