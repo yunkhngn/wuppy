@@ -62,22 +62,20 @@ struct DebtsView: View {
         )
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button(action: { showingAddDebt = true }) {
+                Button(action: {
+                    selectedDebt = nil
+                    showingAddDebt = true
+                }) {
                     Label("Add Debt", systemImage: "plus")
                 }
             }
         }
-        .sheet(isPresented: $showingAddDebt) {
+        .inspector(isPresented: $showingAddDebt) {
             NavigationStack {
-                AddEditDebtView()
+                AddEditDebtView(debt: selectedDebt)
             }
             .environment(\.locale, locale)
-        }
-        .sheet(item: $selectedDebt) { debt in
-             NavigationStack {
-                 AddEditDebtView(debt: debt)
-             }
-             .environment(\.locale, locale)
+            .inspectorColumnWidth(min: 400, ideal: 500, max: 600)
         }
     }
     

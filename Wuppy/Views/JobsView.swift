@@ -79,16 +79,20 @@ struct JobsView: View {
         )
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button(action: { showingAddJob = true }) {
+                Button(action: {
+                    selectedJob = nil
+                    showingAddJob = true
+                }) {
                     Label("Add Job", systemImage: "plus")
                 }
             }
         }
-        .sheet(isPresented: $showingAddJob) {
+        .inspector(isPresented: $showingAddJob) {
             NavigationStack {
-                AddEditJobView()
+                AddEditJobView(job: selectedJob)
             }
             .environment(\.locale, locale)
+            .inspectorColumnWidth(min: 400, ideal: 500, max: 600)
         }
 
     }

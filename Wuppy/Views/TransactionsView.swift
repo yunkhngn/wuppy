@@ -24,6 +24,7 @@ struct TransactionsView: View {
                     .contextMenu {
                         Button {
                             selectedTransaction = transaction
+                            showingAddTransaction = true
                         } label: {
                             Label("edit", systemImage: "pencil")
                         }
@@ -62,22 +63,20 @@ struct TransactionsView: View {
         )
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button(action: { showingAddTransaction = true }) {
+                Button(action: {
+                    selectedTransaction = nil
+                    showingAddTransaction = true
+                }) {
                     Label("Add Transaction", systemImage: "plus")
                 }
             }
         }
-        .sheet(isPresented: $showingAddTransaction) {
+        .inspector(isPresented: $showingAddTransaction) {
             NavigationStack {
-                AddEditTransactionView()
+                AddEditTransactionView(transaction: selectedTransaction)
             }
             .environment(\.locale, locale)
-        }
-        .sheet(item: $selectedTransaction) { transaction in
-             NavigationStack {
-                 AddEditTransactionView(transaction: transaction)
-             }
-             .environment(\.locale, locale)
+            .inspectorColumnWidth(min: 400, ideal: 500, max: 600)
         }
     }
     
