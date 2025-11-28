@@ -63,6 +63,7 @@ struct DashboardView: View {
                 Divider()
                 
                 // Recent Activity or Charts could go here
+                AnalyticsChartsView()
                 
                 Spacer()
             }
