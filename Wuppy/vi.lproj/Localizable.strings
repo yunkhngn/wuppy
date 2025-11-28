@@ -44,3 +44,52 @@
 "system_default" = "Mặc định hệ thống";
 "english" = "Tiếng Anh";
 "vietnamese" = "Tiếng Việt";
+
+// Common
+"cancel" = "Hủy";
+"save" = "Lưu";
+"details" = "Chi tiết";
+"notes" = "Ghi chú";
+"dates" = "Ngày tháng";
+
+// Add/Edit Job
+"new_job" = "Công việc mới";
+"edit_job" = "Sửa công việc";
+"job_details" = "Chi tiết công việc";
+"job_title_label" = "Tiêu đề";
+"client_name" = "Tên khách hàng";
+"job_type" = "Loại";
+"job_status" = "Trạng thái";
+"billing" = "Thanh toán";
+"billing_type" = "Loại thanh toán";
+"fixed_price" = "Trọn gói";
+"hourly_rate" = "Theo giờ";
+"has_deadline" = "Có hạn chót";
+"deadline" = "Hạn chót";
+
+// Add/Edit Debt
+"new_debt" = "Khoản nợ mới";
+"edit_debt" = "Sửa khoản nợ";
+"person_name" = "Tên người";
+"role" = "Vai trò";
+"amount" = "Số tiền";
+"interest_rate" = "Lãi suất (%)";
+"has_due_date" = "Có ngày đến hạn";
+"due_date" = "Ngày đến hạn";
+
+// Add/Edit Transaction
+"new_transaction" = "Giao dịch mới";
+"edit_transaction" = "Sửa giao dịch";
+"category" = "Danh mục";
+"date" = "Ngày";
+"link_to_job" = "Liên kết công việc (Tùy chọn)";
+"none" = "Không";
+
+// Add/Edit Goal
+"new_goal" = "Mục tiêu mới";
+"edit_goal" = "Sửa mục tiêu";
+"goal_name" = "Tên mục tiêu";
+"target_amount" = "Mục tiêu";
+"current_saved" = "Đã tiết kiệm";
+"has_target_date" = "Có ngày mục tiêu";
+"target_date" = "Ngày mục tiêu";

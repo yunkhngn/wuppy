@@ -44,3 +44,52 @@
 "system_default" = "System Default";
 "english" = "English";
 "vietnamese" = "Vietnamese";
+
+// Common
+"cancel" = "Cancel";
+"save" = "Save";
+"details" = "Details";
+"notes" = "Notes";
+"dates" = "Dates";
+
+// Add/Edit Job
+"new_job" = "New Job";
+"edit_job" = "Edit Job";
+"job_details" = "Job Details";
+"job_title_label" = "Title";
+"client_name" = "Client Name";
+"job_type" = "Type";
+"job_status" = "Status";
+"billing" = "Billing";
+"billing_type" = "Billing Type";
+"fixed_price" = "Fixed Price";
+"hourly_rate" = "Hourly Rate";
+"has_deadline" = "Has Deadline";
+"deadline" = "Deadline";
+
+// Add/Edit Debt
+"new_debt" = "New Debt";
+"edit_debt" = "Edit Debt";
+"person_name" = "Person Name";
+"role" = "Role";
+"amount" = "Amount";
+"interest_rate" = "Interest Rate (%)";
+"has_due_date" = "Has Due Date";
+"due_date" = "Due Date";
+
+// Add/Edit Transaction
+"new_transaction" = "New Transaction";
+"edit_transaction" = "Edit Transaction";
+"category" = "Category";
+"date" = "Date";
+"link_to_job" = "Link to Job (Optional)";
+"none" = "None";
+
+// Add/Edit Goal
+"new_goal" = "New Goal";
+"edit_goal" = "Edit Goal";
+"goal_name" = "Goal Name";
+"target_amount" = "Target Amount";
+"current_saved" = "Current Saved";
+"has_target_date" = "Has Target Date";
+"target_date" = "Target Date";

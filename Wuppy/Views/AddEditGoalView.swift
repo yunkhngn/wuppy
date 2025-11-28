@@ -37,34 +37,34 @@ struct AddEditGoalView: View {
     
     var body: some View {
         Form {
-            Section("Details") {
-                TextField("Goal Name", text: $name)
-                TextField("Target Amount", value: $targetAmount, format: .currency(code: "VND"))
-                TextField("Current Saved", value: $currentAmount, format: .currency(code: "VND"))
+            Section("details") {
+                TextField("goal_name", text: $name)
+                TextField("target_amount", value: $targetAmount, format: .currency(code: "VND"))
+                TextField("current_saved", value: $currentAmount, format: .currency(code: "VND"))
             }
             
-            Section("Dates") {
-                Toggle("Has Target Date", isOn: $hasTargetDate)
+            Section("dates") {
+                Toggle("has_target_date", isOn: $hasTargetDate)
                 if hasTargetDate {
-                    DatePicker("Target Date", selection: $targetDate, displayedComponents: .date)
+                    DatePicker("target_date", selection: $targetDate, displayedComponents: .date)
                 }
             }
             
-            Section("Notes") {
+            Section("notes") {
                 TextEditor(text: $notes)
                     .frame(minHeight: 100)
             }
         }
         .formStyle(.grouped)
-        .navigationTitle(goalToEdit == nil ? "New Goal" : "Edit Goal")
+        .navigationTitle(goalToEdit == nil ? "new_goal" : "edit_goal")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
+                Button("cancel") {
                     dismiss()
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
+                Button("save") {
                     save()
                 }
                 .disabled(name.isEmpty || targetAmount <= 0)

@@ -39,39 +39,39 @@ struct AddEditDebtView: View {
     
     var body: some View {
         Form {
-            Section("Details") {
-                TextField("Person Name", text: $personName)
-                Picker("Role", selection: $role) {
+            Section("details") {
+                TextField("person_name", text: $personName)
+                Picker("role", selection: $role) {
                     ForEach(DebtRole.allCases, id: \.self) { role in
                         Text(role.rawValue).tag(role)
                     }
                 }
-                TextField("Amount", value: $principalAmount, format: .currency(code: "VND"))
-                TextField("Interest Rate (%)", value: $interestRate, format: .number)
+                TextField("amount", value: $principalAmount, format: .currency(code: "VND"))
+                TextField("interest_rate", value: $interestRate, format: .number)
             }
             
-            Section("Dates") {
-                Toggle("Has Due Date", isOn: $hasDueDate)
+            Section("dates") {
+                Toggle("has_due_date", isOn: $hasDueDate)
                 if hasDueDate {
-                    DatePicker("Due Date", selection: $dueDate, displayedComponents: .date)
+                    DatePicker("due_date", selection: $dueDate, displayedComponents: .date)
                 }
             }
             
-            Section("Notes") {
+            Section("notes") {
                 TextEditor(text: $notes)
                     .frame(minHeight: 100)
             }
         }
         .formStyle(.grouped)
-        .navigationTitle(debtToEdit == nil ? "New Debt" : "Edit Debt")
+        .navigationTitle(debtToEdit == nil ? "new_debt" : "edit_debt")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
+                Button("cancel") {
                     dismiss()
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
+                Button("save") {
                     save()
                 }
                 .disabled(personName.isEmpty || principalAmount <= 0)

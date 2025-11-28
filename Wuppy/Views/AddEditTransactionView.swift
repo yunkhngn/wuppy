@@ -37,45 +37,45 @@ struct AddEditTransactionView: View {
     
     var body: some View {
         Form {
-            Section("Details") {
-                Picker("Type", selection: $type) {
+            Section("details") {
+                Picker("job_type", selection: $type) {
                     ForEach(TransactionType.allCases, id: \.self) { type in
                         Text(type.rawValue).tag(type)
                     }
                 }
                 .pickerStyle(.segmented)
                 
-                TextField("Amount", value: $amount, format: .currency(code: "VND"))
+                TextField("amount", value: $amount, format: .currency(code: "VND"))
                 
-                TextField("Category", text: $category) // Could be a picker with predefined categories later
+                TextField("category", text: $category) // Could be a picker with predefined categories later
                 
-                DatePicker("Date", selection: $date, displayedComponents: [.date, .hourAndMinute])
+                DatePicker("date", selection: $date, displayedComponents: [.date, .hourAndMinute])
             }
             
-            Section("Link to Job (Optional)") {
-                Picker("Job", selection: $selectedJob) {
-                    Text("None").tag(nil as Job?)
+            Section("link_to_job") {
+                Picker("jobs_title", selection: $selectedJob) {
+                    Text("none").tag(nil as Job?)
                     ForEach(jobs) { job in
                         Text(job.title).tag(job as Job?)
                     }
                 }
             }
             
-            Section("Notes") {
+            Section("notes") {
                 TextEditor(text: $note)
                     .frame(minHeight: 100)
             }
         }
         .formStyle(.grouped)
-        .navigationTitle(transactionToEdit == nil ? "New Transaction" : "Edit Transaction")
+        .navigationTitle(transactionToEdit == nil ? "new_transaction" : "edit_transaction")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
+                Button("cancel") {
                     dismiss()
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
+                Button("save") {
                     save()
                 }
                 .disabled(amount <= 0 || category.isEmpty)

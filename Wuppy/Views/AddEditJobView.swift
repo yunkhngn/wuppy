@@ -45,57 +45,57 @@ struct AddEditJobView: View {
     
     var body: some View {
         Form {
-            Section("Job Details") {
-                TextField("Title", text: $title)
-                TextField("Client Name", text: $clientName)
-                Picker("Type", selection: $jobType) {
+            Section("job_details") {
+                TextField("job_title_label", text: $title)
+                TextField("client_name", text: $clientName)
+                Picker("job_type", selection: $jobType) {
                     ForEach(JobType.allCases, id: \.self) { type in
                         Text(type.rawValue).tag(type)
                     }
                 }
-                Picker("Status", selection: $status) {
+                Picker("job_status", selection: $status) {
                     ForEach(JobStatus.allCases, id: \.self) { status in
                         Text(status.rawValue).tag(status)
                     }
                 }
             }
             
-            Section("Billing") {
-                Picker("Billing Type", selection: $billingType) {
+            Section("billing") {
+                Picker("billing_type", selection: $billingType) {
                     ForEach(BillingType.allCases, id: \.self) { type in
                         Text(type.rawValue).tag(type)
                     }
                 }
                 
                 if billingType == .fixedPrice {
-                    TextField("Fixed Price", value: $fixedPrice, format: .currency(code: "VND"))
+                    TextField("fixed_price", value: $fixedPrice, format: .currency(code: "VND"))
                 } else {
-                    TextField("Hourly Rate", value: $rate, format: .currency(code: "VND"))
+                    TextField("hourly_rate", value: $rate, format: .currency(code: "VND"))
                 }
             }
             
-            Section("Dates") {
-                Toggle("Has Deadline", isOn: $hasDeadline)
+            Section("dates") {
+                Toggle("has_deadline", isOn: $hasDeadline)
                 if hasDeadline {
-                    DatePicker("Deadline", selection: $deadline, displayedComponents: .date)
+                    DatePicker("deadline", selection: $deadline, displayedComponents: .date)
                 }
             }
             
-            Section("Notes") {
+            Section("notes") {
                 TextEditor(text: $jobDescription)
                     .frame(minHeight: 100)
             }
         }
         .formStyle(.grouped)
-        .navigationTitle(jobToEdit == nil ? "New Job" : "Edit Job")
+        .navigationTitle(jobToEdit == nil ? "new_job" : "edit_job")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
+                Button("cancel") {
                     dismiss()
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
+                Button("save") {
                     save()
                 }
                 .disabled(title.isEmpty || clientName.isEmpty)
