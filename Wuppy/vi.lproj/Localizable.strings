@@ -38,3 +38,9 @@
 // Settings
 "settings_title" = "Cài đặt";
 "enable_icloud_sync" = "Bật đồng bộ iCloud";
+"general_settings" = "Chung";
+"sync_settings" = "Đồng bộ";
+"language" = "Ngôn ngữ";
+"system_default" = "Mặc định hệ thống";
+"english" = "Tiếng Anh";
+"vietnamese" = "Tiếng Việt";

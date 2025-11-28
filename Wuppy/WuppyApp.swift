@@ -32,16 +32,27 @@ struct WuppyApp: App {
         }
     }()
 
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "system"
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.locale, locale)
         }
         .modelContainer(sharedModelContainer)
         
         MenuBarExtra("Wuppy", systemImage: "banknote") {
             MenuBarView()
                 .modelContainer(sharedModelContainer)
+                .environment(\.locale, locale)
         }
         .menuBarExtraStyle(.window)
+    }
+    
+    private var locale: Locale {
+        if selectedLanguage == "system" {
+            return Locale.current
+        }
+        return Locale(identifier: selectedLanguage)
     }
 }

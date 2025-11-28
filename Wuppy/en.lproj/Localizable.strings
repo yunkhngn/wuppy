@@ -38,3 +38,9 @@
 // Settings
 "settings_title" = "Settings";
 "enable_icloud_sync" = "Enable iCloud Sync";
+"general_settings" = "General";
+"sync_settings" = "Sync";
+"language" = "Language";
+"system_default" = "System Default";
+"english" = "English";
+"vietnamese" = "Vietnamese";
