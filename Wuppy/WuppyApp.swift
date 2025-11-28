@@ -10,11 +10,11 @@ import SwiftData
 
 @main
 struct WuppyApp: App {
-    init() {
-        NotificationManager.shared.requestAuthorization()
-    }
+    let sharedModelContainer: ModelContainer
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "system"
+    @AppStorage("appearance") private var appearance: String = "system"
     
-    var sharedModelContainer: ModelContainer = {
+    init() {
         let schema = Schema([
             Item.self,
             Job.self,
@@ -26,18 +26,20 @@ struct WuppyApp: App {
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            sharedModelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }()
+        
+        // Request notification permission
+        NotificationManager.shared.requestAuthorization()
+    }
 
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "system"
-    
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(\.locale, locale)
+                .preferredColorScheme(colorScheme)
         }
         .modelContainer(sharedModelContainer)
         
@@ -54,5 +56,13 @@ struct WuppyApp: App {
             return Locale.current
         }
         return Locale(identifier: selectedLanguage)
+    }
+    
+    private var colorScheme: ColorScheme? {
+        switch appearance {
+        case "light": return .light
+        case "dark": return .dark
+        default: return nil
+        }
     }
 }

@@ -44,6 +44,9 @@
 "system_default" = "System Default";
 "english" = "English";
 "vietnamese" = "Vietnamese";
+"appearance" = "Appearance";
+"light" = "Light";
+"dark" = "Dark";
 
 // Common
 "cancel" = "Cancel";
