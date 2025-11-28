@@ -17,28 +17,50 @@ struct TransactionsView: View {
     @State private var selectedTransaction: Transaction?
     
     var body: some View {
-        List(selection: $selectedTransaction) {
+        List {
             ForEach(transactions) { transaction in
-                NavigationLink(value: transaction) {
-                    TransactionRowView(transaction: transaction)
-                }
-                .contextMenu {
-                    Button {
-                        selectedTransaction = transaction
-                    } label: {
-                        Label("edit", systemImage: "pencil")
+                TransactionRowView(transaction: transaction)
+                    .wuppyHoverEffect()
+                    .contentShape(Rectangle())
+                    .contextMenu {
+                        Button {
+                            selectedTransaction = transaction
+                        } label: {
+                            Label("edit", systemImage: "pencil")
+                        }
+                        
+                        Button(role: .destructive) {
+                            modelContext.delete(transaction)
+                        } label: {
+                            Label("delete", systemImage: "trash")
+                        }
                     }
-                    
-                    Button(role: .destructive) {
-                        modelContext.delete(transaction)
-                    } label: {
-                        Label("delete", systemImage: "trash")
-                    }
-                }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
             }
             .onDelete(perform: deleteTransactions)
         }
         .navigationTitle("transactions_title")
+        .scrollContentBackground(.hidden)
+        .background(
+            ZStack {
+                Color(nsColor: .windowBackgroundColor)
+                
+                // Subtle ambient gradients
+                GeometryReader { proxy in
+                    Circle()
+                        .fill(.blue.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: -100, y: -100)
+                    
+                    Circle()
+                        .fill(.purple.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: proxy.size.width * 0.8, y: proxy.size.height * 0.5)
+                }
+            }
+            .ignoresSafeArea()
+        )
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: { showingAddTransaction = true }) {

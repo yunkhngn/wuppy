@@ -16,8 +16,8 @@ struct WuppyColor {
 // MARK: - Components
 
 struct WuppyCard<Content: View>: View {
-    var content: Content
-    var padding: CGFloat = 16
+    let content: Content
+    let padding: CGFloat
     
     init(padding: CGFloat = 16, @ViewBuilder content: () -> Content) {
         self.padding = padding
@@ -29,11 +29,11 @@ struct WuppyCard<Content: View>: View {
             .padding(padding)
             .background(.ultraThinMaterial)
             .cornerRadius(16)
-            .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(.white.opacity(0.2), lineWidth: 1)
             )
+            .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
     }
 }
 
@@ -116,5 +116,27 @@ struct WuppySectionHeader: View {
         }
         .padding(.bottom, 8)
         .padding(.top, 16)
+    }
+}
+struct HoverEffectModifier: ViewModifier {
+    @State private var isHovering = false
+    
+    func body(content: Content) -> some View {
+        content
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isHovering ? Color.secondary.opacity(0.1) : Color.clear)
+            )
+            .onHover { hovering in
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    isHovering = hovering
+                }
+            }
+    }
+}
+
+extension View {
+    func wuppyHoverEffect() -> some View {
+        modifier(HoverEffectModifier())
     }
 }

@@ -76,7 +76,7 @@ struct AddEditJobView: View {
                                     .foregroundStyle(.secondary)
                                 Picker("", selection: $jobType) {
                                     ForEach(JobType.allCases, id: \.self) { type in
-                                        Text(type.rawValue).tag(type)
+                                        Text(type.localizedName).tag(type)
                                     }
                                 }
                                 .labelsHidden()
@@ -89,7 +89,7 @@ struct AddEditJobView: View {
                                     .foregroundStyle(.secondary)
                                 Picker("", selection: $status) {
                                     ForEach(JobStatus.allCases, id: \.self) { status in
-                                        Text(status.rawValue).tag(status)
+                                        Text(status.localizedName).tag(status)
                                     }
                                 }
                                 .labelsHidden()
@@ -112,7 +112,7 @@ struct AddEditJobView: View {
                                     .foregroundStyle(.secondary)
                                 Picker("", selection: $billingType) {
                                     ForEach(BillingType.allCases, id: \.self) { type in
-                                        Text(type.rawValue).tag(type)
+                                        Text(type.localizedName).tag(type)
                                     }
                                 }
                                 .labelsHidden()
@@ -178,7 +178,25 @@ struct AddEditJobView: View {
                 Spacer().frame(height: 20)
             }
         }
-        .background(Color(nsColor: .windowBackgroundColor))
+        .background(
+            ZStack {
+                Color(nsColor: .windowBackgroundColor)
+                
+                // Subtle ambient gradients
+                GeometryReader { proxy in
+                    Circle()
+                        .fill(.blue.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: -100, y: -100)
+                    
+                    Circle()
+                        .fill(.purple.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: proxy.size.width * 0.8, y: proxy.size.height * 0.5)
+                }
+            }
+            .ignoresSafeArea()
+        )
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("cancel") {

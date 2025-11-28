@@ -87,8 +87,8 @@ struct DashboardView: View {
                     .padding(.horizontal)
                     
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 220))], spacing: 20) {
-                        MultiCurrencySummaryCard(title: "i_owe", amounts: debtIOweByCurrency, gradient: WuppyColor.expenseGradient.opacity(0.8), icon: "hand.thumbsdown.fill")
-                        MultiCurrencySummaryCard(title: "they_owe_me", amounts: debtOwedToMeByCurrency, gradient: WuppyColor.incomeGradient.opacity(0.8), icon: "hand.thumbsup.fill")
+                        MultiCurrencySummaryCard(title: "i_owe", amounts: debtIOweByCurrency, gradient: WuppyColor.expenseGradient, icon: "hand.thumbsdown.fill")
+                        MultiCurrencySummaryCard(title: "they_owe_me", amounts: debtOwedToMeByCurrency, gradient: WuppyColor.incomeGradient, icon: "hand.thumbsup.fill")
                     }
                     .padding(.horizontal)
                 }
@@ -98,7 +98,7 @@ struct DashboardView: View {
                     HStack {
                         Image(systemName: "chart.xyaxis.line")
                             .foregroundStyle(.purple)
-                        Text("Analytics") // Need localization key if not exists
+                        Text("Analytics")
                             .font(.title2)
                             .bold()
                     }
@@ -115,8 +115,26 @@ struct DashboardView: View {
             }
             .padding(.vertical)
         }
-        .navigationTitle("") // Hide default title as we have custom header
-        .background(Color(nsColor: .windowBackgroundColor))
+        .navigationTitle("")
+        .background(
+            ZStack {
+                Color(nsColor: .windowBackgroundColor)
+                
+                // Subtle ambient gradients
+                GeometryReader { proxy in
+                    Circle()
+                        .fill(.blue.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: -100, y: -100)
+                    
+                    Circle()
+                        .fill(.purple.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: proxy.size.width * 0.8, y: proxy.size.height * 0.5)
+                }
+            }
+            .ignoresSafeArea()
+        )
     }
 }
 
@@ -127,41 +145,42 @@ struct MultiCurrencySummaryCard<G: View>: View {
     let icon: String
     
     var body: some View {
-        WuppyCard(padding: 0) {
-            ZStack(alignment: .topLeading) {
-                gradient
-                    .opacity(0.15)
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack {
+        WuppyCard(padding: 16) {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    ZStack {
+                        Circle()
+                            .fill(.ultraThinMaterial)
+                            .frame(width: 36, height: 36)
+                        
+                        gradient
+                            .mask(Circle().frame(width: 36, height: 36))
+                            .opacity(0.2)
+                        
                         Image(systemName: icon)
-                            .font(.title2)
-                            .foregroundStyle(.secondary)
-                            .padding(8)
-                            .background(.ultraThinMaterial)
-                            .clipShape(Circle())
-                        
-                        Spacer()
-                        
-                        Text(title)
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundStyle(.secondary)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.primary)
                     }
                     
-                    VStack(alignment: .leading, spacing: 4) {
-                        if amounts.isEmpty {
-                            Text(0, format: .currency(code: "VND"))
+                    Spacer()
+                }
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                    
+                    if amounts.isEmpty {
+                        Text(0, format: .currency(code: "VND"))
+                            .font(.system(size: 24, weight: .bold, design: .rounded))
+                    } else {
+                        ForEach(amounts.sorted(by: { $0.key < $1.key }), id: \.key) { currency, amount in
+                            Text(amount, format: .currency(code: currency))
                                 .font(.system(size: 24, weight: .bold, design: .rounded))
-                        } else {
-                            ForEach(amounts.sorted(by: { $0.key < $1.key }), id: \.key) { currency, amount in
-                                Text(amount, format: .currency(code: currency))
-                                    .font(.system(size: 24, weight: .bold, design: .rounded))
-                            }
                         }
                     }
                 }
-                .padding()
             }
         }
     }

@@ -17,28 +17,50 @@ struct GoalsView: View {
     @State private var selectedGoal: Goal?
     
     var body: some View {
-        List(selection: $selectedGoal) {
+        List {
             ForEach(goals) { goal in
-                NavigationLink(value: goal) {
-                    GoalRowView(goal: goal)
-                }
-                .contextMenu {
-                    Button {
-                        selectedGoal = goal
-                    } label: {
-                        Label("edit", systemImage: "pencil")
+                GoalRowView(goal: goal)
+                    .wuppyHoverEffect()
+                    .contentShape(Rectangle())
+                    .contextMenu {
+                        Button {
+                            selectedGoal = goal
+                        } label: {
+                            Label("edit", systemImage: "pencil")
+                        }
+                        
+                        Button(role: .destructive) {
+                            modelContext.delete(goal)
+                        } label: {
+                            Label("delete", systemImage: "trash")
+                        }
                     }
-                    
-                    Button(role: .destructive) {
-                        modelContext.delete(goal)
-                    } label: {
-                        Label("delete", systemImage: "trash")
-                    }
-                }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
             }
             .onDelete(perform: deleteGoals)
         }
         .navigationTitle("goals_title")
+        .scrollContentBackground(.hidden)
+        .background(
+            ZStack {
+                Color(nsColor: .windowBackgroundColor)
+                
+                // Subtle ambient gradients
+                GeometryReader { proxy in
+                    Circle()
+                        .fill(.blue.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: -100, y: -100)
+                    
+                    Circle()
+                        .fill(.purple.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: proxy.size.width * 0.8, y: proxy.size.height * 0.5)
+                }
+            }
+            .ignoresSafeArea()
+        )
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: { showingAddGoal = true }) {

@@ -107,3 +107,33 @@
 "analytics_title" = "Thống kê";
 "income_over_time" = "Thu nhập theo thời gian";
 "expenses_by_category" = "Chi tiêu theo danh mục";
+
+// Enums - Job Status
+"job_status_draft" = "Nháp";
+"job_status_negotiating" = "Đàm phán";
+"job_status_in_progress" = "Đang làm";
+"job_status_review" = "Review";
+"job_status_waiting_payment" = "Chờ thanh toán";
+"job_status_paid" = "Đã thanh toán";
+"job_status_canceled" = "Đã hủy";
+"job_status_failed" = "Thất bại";
+"job_status_scammed" = "Lừa đảo";
+
+// Enums - Job Type
+"job_type_development" = "Lập trình";
+"job_type_design" = "Thiết kế";
+"job_type_video_editing" = "Dựng phim";
+"job_type_music" = "Âm nhạc";
+"job_type_other" = "Khác";
+
+// Enums - Billing Type
+"billing_type_fixed_price" = "Trọn gói";
+"billing_type_hourly" = "Theo giờ";
+
+// Enums - Debt Role
+"debt_role_i_owe" = "Tôi nợ";
+"debt_role_they_owe_me" = "Nợ tôi";
+
+// Enums - Transaction Type
+"transaction_type_income" = "Thu nhập";
+"transaction_type_expense" = "Chi tiêu";

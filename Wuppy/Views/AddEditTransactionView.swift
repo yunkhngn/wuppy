@@ -55,13 +55,13 @@ struct AddEditTransactionView: View {
                         WuppySectionHeader(title: "details", icon: "doc.text.fill")
                         
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("job_type")
+                            Text("job_type") // This key might be wrong, should be "type" or "transaction_type"
                                 .font(.caption)
                                 .fontWeight(.medium)
                                 .foregroundStyle(.secondary)
                             Picker("", selection: $type) {
                                 ForEach(TransactionType.allCases, id: \.self) { type in
-                                    Text(type.rawValue).tag(type)
+                                    Text(type.localizedName).tag(type)
                                 }
                             }
                             .labelsHidden()
@@ -134,7 +134,25 @@ struct AddEditTransactionView: View {
                 Spacer().frame(height: 20)
             }
         }
-        .background(Color(nsColor: .windowBackgroundColor))
+        .background(
+            ZStack {
+                Color(nsColor: .windowBackgroundColor)
+                
+                // Subtle ambient gradients
+                GeometryReader { proxy in
+                    Circle()
+                        .fill(.blue.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: -100, y: -100)
+                    
+                    Circle()
+                        .fill(.purple.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: proxy.size.width * 0.8, y: proxy.size.height * 0.5)
+                }
+            }
+            .ignoresSafeArea()
+        )
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("cancel") {

@@ -17,45 +17,67 @@ struct JobsView: View {
     @State private var selectedJob: Job?
     
     var body: some View {
-        List(selection: $selectedJob) {
+        List {
             ForEach(jobs) { job in
-                NavigationLink(value: job) {
-                    JobRowView(job: job)
-                }
-                .contextMenu {
-                    Button {
-                        selectedJob = job
-                        showingAddJob = true
-                    } label: {
-                        Label("edit", systemImage: "pencil")
-                    }
-                    
-                    Button(role: .destructive) {
-                        modelContext.delete(job)
-                    } label: {
-                        Label("delete", systemImage: "trash")
-                    }
-                    
-                    Divider()
-                    
-                    Menu("job_status") {
-                        ForEach(JobStatus.allCases, id: \.self) { status in
-                            Button {
-                                job.status = status
-                            } label: {
-                                if job.status == status {
-                                    Label(status.rawValue, systemImage: "checkmark")
-                                } else {
-                                    Text(status.rawValue)
+                JobRowView(job: job)
+                    .wuppyHoverEffect()
+                    .contentShape(Rectangle()) // Make entire row tappable for context menu
+                    .contextMenu {
+                        Button {
+                            selectedJob = job
+                            showingAddJob = true
+                        } label: {
+                            Label("edit", systemImage: "pencil")
+                        }
+                        
+                        Button(role: .destructive) {
+                            modelContext.delete(job)
+                        } label: {
+                            Label("delete", systemImage: "trash")
+                        }
+                        
+                        Divider()
+                        
+                        Menu("job_status") {
+                            ForEach(JobStatus.allCases, id: \.self) { status in
+                                Button {
+                                    job.status = status
+                                } label: {
+                                    if job.status == status {
+                                        Label(status.localizedName, systemImage: "checkmark")
+                                    } else {
+                                        Text(status.localizedName)
+                                    }
                                 }
                             }
                         }
                     }
-                }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
             }
             .onDelete(perform: deleteJobs)
         }
         .navigationTitle("jobs_title")
+        .scrollContentBackground(.hidden)
+        .background(
+            ZStack {
+                Color(nsColor: .windowBackgroundColor)
+                
+                // Subtle ambient gradients
+                GeometryReader { proxy in
+                    Circle()
+                        .fill(.blue.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: -100, y: -100)
+                    
+                    Circle()
+                        .fill(.purple.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: proxy.size.width * 0.8, y: proxy.size.height * 0.5)
+                }
+            }
+            .ignoresSafeArea()
+        )
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: { showingAddJob = true }) {
@@ -69,9 +91,7 @@ struct JobsView: View {
             }
             .environment(\.locale, locale)
         }
-        .navigationDestination(for: Job.self) { job in
-            JobDetailView(job: job)
-        }
+
     }
     
     private func deleteJobs(offsets: IndexSet) {

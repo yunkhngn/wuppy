@@ -65,7 +65,7 @@ struct AddEditDebtView: View {
                                 .foregroundStyle(.secondary)
                             Picker("", selection: $role) {
                                 ForEach(DebtRole.allCases, id: \.self) { role in
-                                    Text(role.rawValue).tag(role)
+                                    Text(role.localizedName).tag(role)
                                 }
                             }
                             .labelsHidden()
@@ -128,7 +128,25 @@ struct AddEditDebtView: View {
                 Spacer().frame(height: 20)
             }
         }
-        .background(Color(nsColor: .windowBackgroundColor))
+        .background(
+            ZStack {
+                Color(nsColor: .windowBackgroundColor)
+                
+                // Subtle ambient gradients
+                GeometryReader { proxy in
+                    Circle()
+                        .fill(.blue.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: -100, y: -100)
+                    
+                    Circle()
+                        .fill(.purple.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: proxy.size.width * 0.8, y: proxy.size.height * 0.5)
+                }
+            }
+            .ignoresSafeArea()
+        )
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("cancel") {
