@@ -13,6 +13,11 @@ struct WuppyApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
+            Job.self,
+            TimeSession.self,
+            Debt.self,
+            Transaction.self,
+            Goal.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
