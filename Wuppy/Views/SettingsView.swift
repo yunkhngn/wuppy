@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SettingsView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "system"
@@ -74,36 +75,29 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     
     private func deleteAllData() {
+        // Manual delete loop to ensure compatibility
         do {
-            try modelContext.delete(model: Transaction.self)
-            try modelContext.delete(model: Job.self)
-            try modelContext.delete(model: Debt.self)
-            try modelContext.delete(model: Goal.self)
-            try modelContext.delete(model: JobCategory.self)
-            try modelContext.delete(model: TimeSession.self)
+            let transactions = try modelContext.fetch(FetchDescriptor<Transaction>())
+            for item in transactions { modelContext.delete(item) }
+            
+            let jobs = try modelContext.fetch(FetchDescriptor<Job>())
+            for item in jobs { modelContext.delete(item) }
+            
+            let debts = try modelContext.fetch(FetchDescriptor<Debt>())
+            for item in debts { modelContext.delete(item) }
+            
+            let goals = try modelContext.fetch(FetchDescriptor<Goal>())
+            for item in goals { modelContext.delete(item) }
+            
+            let categories = try modelContext.fetch(FetchDescriptor<JobCategory>())
+            for item in categories { modelContext.delete(item) }
+            
+            let sessions = try modelContext.fetch(FetchDescriptor<TimeSession>())
+            for item in sessions { modelContext.delete(item) }
+            
+            try modelContext.save()
         } catch {
-            // Fallback for older versions or if batch delete fails
-            do {
-                let transactions = try modelContext.fetch(FetchDescriptor<Transaction>())
-                for item in transactions { modelContext.delete(item) }
-                
-                let jobs = try modelContext.fetch(FetchDescriptor<Job>())
-                for item in jobs { modelContext.delete(item) }
-                
-                let debts = try modelContext.fetch(FetchDescriptor<Debt>())
-                for item in debts { modelContext.delete(item) }
-                
-                let goals = try modelContext.fetch(FetchDescriptor<Goal>())
-                for item in goals { modelContext.delete(item) }
-                
-                let categories = try modelContext.fetch(FetchDescriptor<JobCategory>())
-                for item in categories { modelContext.delete(item) }
-                
-                let sessions = try modelContext.fetch(FetchDescriptor<TimeSession>())
-                for item in sessions { modelContext.delete(item) }
-            } catch {
-                print("Failed to delete data manually: \(error)")
-            }
+            print("Failed to delete data: \(error)")
         }
     }
 }

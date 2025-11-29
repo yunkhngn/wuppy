@@ -18,7 +18,7 @@ struct WuppyApp: App {
         let schema = Schema([
             Item.self,
             Job.self,
-            JobCategory.self, // Added JobCategory
+            JobCategory.self,
             TimeSession.self,
             Debt.self,
             Transaction.self,
@@ -26,14 +26,35 @@ struct WuppyApp: App {
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
+        self.sharedModelContainer = {
+            do {
+                return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            } catch {
+                print("Could not create ModelContainer: \(error)")
+                print("Attempting to reset data store...")
+                
+                let fileManager = FileManager.default
+                if let supportDir = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
+                    let databaseURL = supportDir.appendingPathComponent("default.store")
+                    try? fileManager.removeItem(at: databaseURL)
+                    try? fileManager.removeItem(at: databaseURL.appendingPathExtension("shm"))
+                    try? fileManager.removeItem(at: databaseURL.appendingPathExtension("wal"))
+                }
+                
+                do {
+                    return try ModelContainer(for: schema, configurations: [modelConfiguration])
+                } catch {
+                    fatalError("Could not create ModelContainer even after reset: \(error)")
+                }
+            }
+        }()
+        
+        // Seed default categories if empty
+        let context = sharedModelContainer.mainContext
+        let descriptor = FetchDescriptor<JobCategory>()
+        
         do {
-            sharedModelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
-            
-            // Seed default categories if empty
-            let context = sharedModelContainer.mainContext
-            let descriptor = FetchDescriptor<JobCategory>()
             let existingCategories = try context.fetch(descriptor)
-            
             if existingCategories.isEmpty {
                 let defaults = ["Development", "Design", "Video Editing", "Music", "Other"]
                 for name in defaults {
@@ -42,9 +63,8 @@ struct WuppyApp: App {
                 }
                 try? context.save()
             }
-            
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            print("Failed to seed data: \(error)")
         }
         
         // Request notification permission

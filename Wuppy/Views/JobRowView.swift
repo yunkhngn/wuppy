@@ -18,13 +18,15 @@ struct JobRowView: View {
                         Text(job.title)
                             .font(.headline)
                             .fontWeight(.bold)
+                            .foregroundStyle(AppColors.textPrimary)
                         
                         if let category = job.category {
                             Text(category.name)
                                 .font(.caption2)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
-                                .background(Color.secondary.opacity(0.1))
+                                .background(AppColors.secondaryBackground)
+                                .foregroundStyle(AppColors.textSecondary)
                                 .clipShape(Capsule())
                         }
                         
@@ -34,7 +36,7 @@ struct JobRowView: View {
                             Text(job.clientName)
                                 .font(.subheadline)
                         }
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppColors.textSecondary)
                     }
                     
                     Spacer()
@@ -53,7 +55,7 @@ struct JobRowView: View {
                             .fontWeight(.medium)
                     }
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppColors.textSecondary)
                     
                     Spacer()
                     
@@ -64,7 +66,7 @@ struct JobRowView: View {
                             Text(deadline, style: .date)
                         }
                         .font(.caption)
-                        .foregroundStyle(deadline < Date() ? .red : .secondary)
+                        .foregroundStyle(deadline < Date() ? AppColors.expense : AppColors.textSecondary)
                     }
                 }
             }
