@@ -146,7 +146,7 @@ struct DashboardView: View {
             }
             .padding(.vertical)
         }
-        .background(AppColors.background)
+
     }
 }
 

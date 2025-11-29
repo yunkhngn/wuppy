@@ -42,7 +42,6 @@ struct TransactionsView: View {
         }
         .navigationTitle("transactions_title")
         .scrollContentBackground(.hidden)
-        .background(AppColors.background)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: {

@@ -63,11 +63,14 @@ struct AppSidebar: View {
                             }
                             .padding(.horizontal, 12)
                             .padding(.vertical, 10)
-                            .foregroundStyle(selection == screen ? AppColors.textPrimary : AppColors.textSecondary)
+                            .foregroundStyle(selection == screen ? AppColors.accent : AppColors.textSecondary)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .fill(selection == screen ? AppColors.accent : Color.clear)
-                                    .opacity(selection == screen ? 1 : 0)
+                                    .fill(selection == screen ? AppColors.accent.opacity(0.15) : Color.clear)
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(selection == screen ? AppColors.accent.opacity(0.3) : Color.clear, lineWidth: 1)
                             )
                             .contentShape(Rectangle())
                         }
@@ -77,7 +80,7 @@ struct AppSidebar: View {
                 .padding(12)
             }
         }
-        .background(AppColors.secondaryBackground)
+        .background(.ultraThinMaterial)
         .navigationTitle("app_name")
     }
 }

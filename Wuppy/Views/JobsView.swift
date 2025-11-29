@@ -68,7 +68,6 @@ struct JobsView: View {
         }
         .navigationTitle("jobs_title")
         .scrollContentBackground(.hidden)
-        .background(AppColors.background)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: {

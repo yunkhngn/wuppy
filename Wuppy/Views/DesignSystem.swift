@@ -88,13 +88,13 @@ struct WuppyCard<Content: View>: View {
     var body: some View {
         content
             .padding(padding)
-            .background(AppColors.cardBackground)
+            .background(.ultraThinMaterial)
             .cornerRadius(16)
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.white.opacity(isHovering ? 0.1 : 0), lineWidth: 1)
+                    .stroke(.white.opacity(isHovering ? 0.2 : 0.1), lineWidth: 1)
             )
-            .shadow(color: .black.opacity(isHovering ? 0.3 : 0.2), radius: isHovering ? 12 : 8, x: 0, y: 4)
+            .shadow(color: .black.opacity(isHovering ? 0.2 : 0.1), radius: isHovering ? 12 : 8, x: 0, y: 4)
             .animation(.easeInOut(duration: 0.2), value: isHovering)
             .onHover { hovering in
                 if isInteractive {

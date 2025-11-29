@@ -60,6 +60,9 @@ struct SettingsView: View {
                 Text("data_management")
             }
         }
+        .formStyle(.grouped)
+        .scrollContentBackground(.hidden)
+        .background(Color.clear)
         .navigationTitle("settings_title")
         .alert("delete_all_data_confirmation", isPresented: $showingDeleteAlert) {
             Button("cancel", role: .cancel) { }

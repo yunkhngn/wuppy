@@ -34,8 +34,28 @@ struct ContentView: View {
                     SettingsView()
                 }
             }
+            }
         }
-        .background(AppColors.background)
+        .id(selection) // Force rebuild when selection changes
+        .background(
+            ZStack {
+                AppColors.background
+                
+                // Subtle ambient gradients
+                GeometryReader { proxy in
+                    Circle()
+                        .fill(AppColors.accent.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: -100, y: -100)
+                    
+                    Circle()
+                        .fill(Color.purple.opacity(0.1))
+                        .blur(radius: 80)
+                        .offset(x: proxy.size.width * 0.8, y: proxy.size.height * 0.5)
+                }
+            }
+            .ignoresSafeArea()
+        )
         .preferredColorScheme(.dark) // Force dark mode
     }
 }

@@ -52,7 +52,6 @@ struct DebtsView: View {
         }
         .navigationTitle("debts_title")
         .scrollContentBackground(.hidden)
-        .background(AppColors.background)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: {
