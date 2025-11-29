@@ -129,17 +129,36 @@ struct DashboardView: View {
                     HStack {
                         Image(systemName: "chart.xyaxis.line")
                             .foregroundStyle(AppColors.accent)
-                        Text("Analytics")
+                        Text("analytics_title")
                             .font(.title2)
                             .bold()
                             .foregroundStyle(AppColors.textPrimary)
                     }
                     .padding(.horizontal)
                     
-                    AnalyticsChartsView()
-                        .padding()
-                        .wuppyCardStyle()
+                    if transactions.isEmpty {
+                        HStack {
+                            Spacer()
+                            VStack(spacing: 12) {
+                                Image(systemName: "chart.bar.xaxis")
+                                    .font(.system(size: 40))
+                                    .foregroundStyle(AppColors.textSecondary.opacity(0.5))
+                                Text("no_analytics_data")
+                                    .font(.subheadline)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+                            .padding(.vertical, 40)
+                            Spacer()
+                        }
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(16)
                         .padding(.horizontal)
+                    } else {
+                        AnalyticsChartsView()
+                            .padding()
+                            .wuppyCardStyle()
+                            .padding(.horizontal)
+                    }
                 }
                 
                 Spacer()

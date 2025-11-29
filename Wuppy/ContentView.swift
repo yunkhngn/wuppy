@@ -35,7 +35,7 @@ struct ContentView: View {
                 }
             }
             }
-        }
+
         .id(selection) // Force rebuild when selection changes
         .background(
             ZStack {

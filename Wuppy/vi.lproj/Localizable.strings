@@ -107,6 +107,7 @@
 "analytics_title" = "Thống kê";
 "income_over_time" = "Thu nhập theo thời gian";
 "expenses_by_category" = "Chi tiêu theo danh mục";
+"no_analytics_data" = "Chưa có dữ liệu thống kê";
 
 // Categories
 "manage_categories" = "Quản lý danh mục";
