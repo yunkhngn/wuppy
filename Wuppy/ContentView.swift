@@ -10,6 +10,7 @@ import SwiftData
 
 struct ContentView: View {
     @State private var selection: AppScreen = .dashboard
+    @Environment(\.locale) private var locale
     
     var body: some View {
         NavigationSplitView {
@@ -37,6 +38,7 @@ struct ContentView: View {
             }
 
         .id(selection) // Force rebuild when selection changes
+        .id(locale.identifier) // Force rebuild when language changes
         .background(
             ZStack {
                 AppColors.background

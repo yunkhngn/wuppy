@@ -28,10 +28,13 @@ struct AddEditJobView: View {
     @State private var deadline: Date = Date().addingTimeInterval(86400 * 7)
     @State private var hasDeadline: Bool = false
     
+    @Binding var isPresented: Bool
+    
     var jobToEdit: Job?
     
-    init(job: Job? = nil) {
+    init(job: Job? = nil, isPresented: Binding<Bool>) {
         self.jobToEdit = job
+        self._isPresented = isPresented
         if let job {
             _title = State(initialValue: job.title)
             _clientName = State(initialValue: job.clientName)
@@ -61,8 +64,8 @@ struct AddEditJobView: View {
                         .padding(.top)
                     
                     // Job Details Section
-                    WuppyCard {
-                        VStack(alignment: .leading, spacing: 16) {
+                    WuppyCard(padding: 24) {
+                        VStack(alignment: .leading, spacing: 20) {
                             WuppySectionHeader(title: "job_details", icon: "briefcase.fill")
                             
                             WuppyTextField(title: "job_title_label", text: $title, icon: "text.alignleft")
@@ -110,8 +113,8 @@ struct AddEditJobView: View {
                     .padding(.horizontal)
                     
                     // Billing Section
-                    WuppyCard {
-                        VStack(alignment: .leading, spacing: 16) {
+                    WuppyCard(padding: 24) {
+                        VStack(alignment: .leading, spacing: 20) {
                             WuppySectionHeader(title: "billing", icon: "banknote.fill")
                             
                             HStack(spacing: 16) {
@@ -152,8 +155,8 @@ struct AddEditJobView: View {
                     .padding(.horizontal)
                     
                     // Dates Section
-                    WuppyCard {
-                        VStack(alignment: .leading, spacing: 16) {
+                    WuppyCard(padding: 24) {
+                        VStack(alignment: .leading, spacing: 20) {
                             WuppySectionHeader(title: "dates", icon: "calendar")
                             
                             Toggle("has_deadline", isOn: $hasDeadline)
@@ -161,7 +164,7 @@ struct AddEditJobView: View {
                             
                             if hasDeadline {
                                 DatePicker("deadline", selection: $deadline, displayedComponents: .date)
-                                    .datePickerStyle(.graphical)
+                                    .datePickerStyle(.compact)
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -169,8 +172,8 @@ struct AddEditJobView: View {
                     .padding(.horizontal)
                     
                     // Notes Section
-                    WuppyCard {
-                        VStack(alignment: .leading, spacing: 16) {
+                    WuppyCard(padding: 24) {
+                        VStack(alignment: .leading, spacing: 20) {
                             WuppySectionHeader(title: "notes", icon: "note.text")
                             
                             TextEditor(text: $jobDescription)
@@ -194,7 +197,7 @@ struct AddEditJobView: View {
             
             HStack {
                 Button("cancel") {
-                    dismiss()
+                    isPresented = false
                 }
                 .keyboardShortcut(.cancelAction)
                 
@@ -265,6 +268,7 @@ struct AddEditJobView: View {
             modelContext.insert(newJob)
             NotificationManager.shared.scheduleJobDeadlineNotification(job: newJob)
         }
-        dismiss()
+        }
+        isPresented = false
     }
 }

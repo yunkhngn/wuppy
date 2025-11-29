@@ -48,7 +48,7 @@ struct TransactionsView: View {
                     selectedTransaction = nil
                     showingAddTransaction = true
                 }) {
-                    Label("Add Transaction", systemImage: "plus")
+                    Label("new_transaction", systemImage: "plus")
                 }
             }
         }
