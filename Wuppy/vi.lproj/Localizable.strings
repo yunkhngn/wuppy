@@ -122,6 +122,11 @@
 "link_to_goal" = "Gắn với Mục tiêu";
 "no_goals" = "Chưa có mục tiêu nào";
 "mark_as_paid" = "Đánh dấu đã thanh toán";
+"settle_debt" = "Tất toán";
+"data_management" = "Quản lý dữ liệu";
+"delete_all_data" = "Xoá tất cả dữ liệu";
+"delete_all_data_confirmation" = "Xoá tất cả dữ liệu?";
+"delete_all_data_message" = "Hành động này không thể hoàn tác. Tất cả dữ liệu của bạn sẽ bị xoá vĩnh viễn.";
 
 // Enums - Job Status
 "job_status_draft" = "Nháp";

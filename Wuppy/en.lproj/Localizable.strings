@@ -122,6 +122,11 @@
 "link_to_goal" = "Link to Goal";
 "no_goals" = "No active goals";
 "mark_as_paid" = "Mark as Paid";
+"settle_debt" = "Settle";
+"data_management" = "Data Management";
+"delete_all_data" = "Delete All Data";
+"delete_all_data_confirmation" = "Delete All Data?";
+"delete_all_data_message" = "This action cannot be undone. All your data will be permanently deleted.";
 
 // Enums - Job Status
 "job_status_draft" = "Draft";

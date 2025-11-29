@@ -1,16 +1,73 @@
 import SwiftUI
 
-// MARK: - Colors & Gradients
-struct WuppyColor {
-    static let cardBackground = Color("CardBackground") // We will need to define this in Assets or use system materials
-    static let primary = Color.accentColor
-    static let secondary = Color.secondary
+// MARK: - App Colors & Styles
+struct AppColors {
+    static let background = Color(hex: "121212") // Deep dark background
+    static let secondaryBackground = Color(hex: "1E1E1E") // Slightly lighter for sidebar
+    static let cardBackground = Color(hex: "252525") // Card background
+    static let accent = Color(hex: "00E5FF") // Vibrant Cyan/Teal
+    static let textPrimary = Color.white
+    static let textSecondary = Color.gray
     
-    // Gradients
-    static let incomeGradient = LinearGradient(colors: [.green.opacity(0.8), .green.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing)
-    static let expenseGradient = LinearGradient(colors: [.red.opacity(0.8), .red.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing)
-    static let netResultGradient = LinearGradient(colors: [.blue.opacity(0.8), .purple.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing)
-    static let cardGradient = LinearGradient(colors: [Color(nsColor: .controlBackgroundColor).opacity(0.8), Color(nsColor: .controlBackgroundColor).opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing)
+    // Semantic colors
+    static let income = Color(hex: "00E676") // Bright Green
+    static let expense = Color(hex: "FF1744") // Bright Red
+}
+
+struct AppStyles {
+    struct CardStyle: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .background(AppColors.cardBackground)
+                .cornerRadius(16)
+                .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
+        }
+    }
+}
+
+extension View {
+    func wuppyCardStyle() -> some View {
+        modifier(AppStyles.CardStyle())
+    }
+}
+
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (1, 1, 1, 0)
+        }
+
+        self.init(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue: Double(b) / 255,
+            opacity: Double(a) / 255
+        )
+    }
+}
+
+// MARK: - Legacy Compatibility (To be refactored)
+struct WuppyColor {
+    static let cardBackground = AppColors.cardBackground
+    static let primary = AppColors.accent
+    static let secondary = AppColors.textSecondary
+    
+    // Gradients (Updated to match new theme)
+    static let incomeGradient = LinearGradient(colors: [AppColors.income.opacity(0.8), AppColors.income.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing)
+    static let expenseGradient = LinearGradient(colors: [AppColors.expense.opacity(0.8), AppColors.expense.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing)
+    static let netResultGradient = LinearGradient(colors: [AppColors.accent.opacity(0.8), Color.purple.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing)
 }
 
 // MARK: - Components
@@ -31,13 +88,13 @@ struct WuppyCard<Content: View>: View {
     var body: some View {
         content
             .padding(padding)
-            .background(.ultraThinMaterial)
+            .background(AppColors.cardBackground)
             .cornerRadius(16)
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
-                    .stroke(.white.opacity(isHovering ? 0.3 : 0.2), lineWidth: 1)
+                    .stroke(Color.white.opacity(isHovering ? 0.1 : 0), lineWidth: 1)
             )
-            .shadow(color: .black.opacity(isHovering ? 0.15 : 0.1), radius: isHovering ? 12 : 10, x: 0, y: 5)
+            .shadow(color: .black.opacity(isHovering ? 0.3 : 0.2), radius: isHovering ? 12 : 8, x: 0, y: 4)
             .animation(.easeInOut(duration: 0.2), value: isHovering)
             .onHover { hovering in
                 if isInteractive {
@@ -57,24 +114,21 @@ struct WuppyTextField: View {
             Text(title)
                 .font(.caption)
                 .fontWeight(.medium)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppColors.textSecondary)
             
             HStack {
                 if let icon = icon {
                     Image(systemName: icon)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppColors.textSecondary)
                         .frame(width: 20)
                 }
                 TextField("", text: $text)
                     .textFieldStyle(.plain)
+                    .foregroundStyle(AppColors.textPrimary)
             }
             .padding(12)
-            .background(Color(nsColor: .controlBackgroundColor))
+            .background(AppColors.secondaryBackground)
             .cornerRadius(10)
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
-            )
         }
     }
 }
@@ -90,24 +144,21 @@ struct WuppyNumberField<F: ParseableFormatStyle>: View where F.FormatInput == Do
             Text(title)
                 .font(.caption)
                 .fontWeight(.medium)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppColors.textSecondary)
             
             HStack {
                 if let icon = icon {
                     Image(systemName: icon)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppColors.textSecondary)
                         .frame(width: 20)
                 }
                 TextField("", value: $value, format: format)
                     .textFieldStyle(.plain)
+                    .foregroundStyle(AppColors.textPrimary)
             }
             .padding(12)
-            .background(Color(nsColor: .controlBackgroundColor))
+            .background(AppColors.secondaryBackground)
             .cornerRadius(10)
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
-            )
         }
     }
 }
@@ -119,10 +170,11 @@ struct WuppySectionHeader: View {
     var body: some View {
         HStack {
             Image(systemName: icon)
-                .foregroundStyle(.blue)
+                .foregroundStyle(AppColors.accent)
             Text(title)
                 .font(.headline)
                 .fontWeight(.semibold)
+                .foregroundStyle(AppColors.textPrimary)
         }
         .padding(.bottom, 8)
         .padding(.top, 16)

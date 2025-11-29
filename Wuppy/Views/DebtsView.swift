@@ -29,6 +29,16 @@ struct DebtsView: View {
                             Label("edit", systemImage: "pencil")
                         }
                         
+                        if debt.remainingAmount > 0 {
+                            Button {
+                                settleDebt(debt)
+                            } label: {
+                                Label("settle_debt", systemImage: "checkmark.circle")
+                            }
+                        }
+                        
+                        Divider()
+                        
                         Button(role: .destructive) {
                             modelContext.delete(debt)
                         } label: {
@@ -72,9 +82,7 @@ struct DebtsView: View {
             }
         }
         .inspector(isPresented: $showingAddDebt) {
-            NavigationStack {
-                AddEditDebtView(debt: selectedDebt)
-            }
+            AddEditDebtView(debt: selectedDebt)
             .id(selectedDebt?.id)
             .environment(\.locale, locale)
             .inspectorColumnWidth(min: 400, ideal: 500, max: 600)
@@ -87,5 +95,22 @@ struct DebtsView: View {
                 modelContext.delete(debts[index])
             }
         }
+    }
+    
+    private func settleDebt(_ debt: Debt) {
+        let transactionType: TransactionType = debt.role == .iOwe ? .expense : .income
+        let category = debt.role == .iOwe ? "Debt Repayment" : "Debt Collection"
+        
+        let transaction = Transaction(
+            type: transactionType,
+            category: category,
+            amount: debt.remainingAmount,
+            date: Date(),
+            currency: debt.currency,
+            note: "Settlement for \(debt.personName)"
+        )
+        modelContext.insert(transaction)
+        
+        debt.lastPaymentDate = Date()
     }
 }

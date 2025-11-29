@@ -44,14 +44,40 @@ struct AppSidebar: View {
     @Binding var selection: AppScreen?
     
     var body: some View {
-        List(selection: $selection) {
-            ForEach(AppScreen.allCases) { screen in
-                NavigationLink(value: screen) {
-                    Label(screen.title, systemImage: screen.icon)
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(spacing: 4) {
+                    ForEach(AppScreen.allCases) { screen in
+                        Button {
+                            selection = screen
+                        } label: {
+                            HStack(spacing: 12) {
+                                Image(systemName: screen.icon)
+                                    .font(.system(size: 16, weight: .medium))
+                                    .frame(width: 24)
+                                
+                                Text(screen.title)
+                                    .font(.system(size: 14, weight: .medium))
+                                
+                                Spacer()
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 10)
+                            .foregroundStyle(selection == screen ? AppColors.textPrimary : AppColors.textSecondary)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(selection == screen ? AppColors.accent : Color.clear)
+                                    .opacity(selection == screen ? 1 : 0)
+                            )
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
+                .padding(12)
             }
         }
-        .listStyle(.sidebar)
+        .background(AppColors.secondaryBackground)
         .navigationTitle("app_name")
     }
 }

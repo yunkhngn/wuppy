@@ -72,9 +72,7 @@ struct GoalsView: View {
             }
         }
         .inspector(isPresented: $showingAddGoal) {
-            NavigationStack {
-                AddEditGoalView(goal: selectedGoal)
-            }
+            AddEditGoalView(goal: selectedGoal)
             .id(selectedGoal?.id)
             .environment(\.locale, locale)
             .inspectorColumnWidth(min: 400, ideal: 500, max: 600)

@@ -57,11 +57,12 @@ struct DashboardView: View {
                     VStack(alignment: .leading) {
                         Text(currentDateString)
                             .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppColors.textSecondary)
                             .textCase(.uppercase)
                         
                         Text("dashboard_title")
                             .font(.system(size: 32, weight: .bold, design: .rounded))
+                            .foregroundStyle(AppColors.textPrimary)
                     }
                     Spacer()
                 }
@@ -69,10 +70,10 @@ struct DashboardView: View {
                 
                 // Summary Cards
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 220))], spacing: 20) {
-                    MultiCurrencySummaryCard(title: "total_income", amounts: incomeByCurrency, gradient: WuppyColor.incomeGradient, icon: "arrow.down.left")
-                    MultiCurrencySummaryCard(title: "total_expenses", amounts: expensesByCurrency, gradient: WuppyColor.expenseGradient, icon: "arrow.up.right")
+                    MultiCurrencySummaryCard(title: "total_income", amounts: incomeByCurrency, color: AppColors.income, icon: "arrow.down.left")
+                    MultiCurrencySummaryCard(title: "total_expenses", amounts: expensesByCurrency, color: AppColors.expense, icon: "arrow.up.right")
                     
-                    MultiCurrencySummaryCard(title: "net_result", amounts: netResult, gradient: WuppyColor.netResultGradient, icon: "chart.bar.fill")
+                    MultiCurrencySummaryCard(title: "net_result", amounts: netResult, color: AppColors.accent, icon: "chart.bar.fill")
                 }
                 .padding(.horizontal)
                 
@@ -80,16 +81,17 @@ struct DashboardView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
                         Image(systemName: "person.2.fill")
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(AppColors.accent)
                         Text("debts_title")
                             .font(.title2)
                             .bold()
+                            .foregroundStyle(AppColors.textPrimary)
                     }
                     .padding(.horizontal)
                     
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 220))], spacing: 20) {
-                        MultiCurrencySummaryCard(title: "i_owe", amounts: debtIOweByCurrency, gradient: WuppyColor.expenseGradient, icon: "hand.thumbsdown.fill")
-                        MultiCurrencySummaryCard(title: "they_owe_me", amounts: debtOwedToMeByCurrency, gradient: WuppyColor.incomeGradient, icon: "hand.thumbsup.fill")
+                        MultiCurrencySummaryCard(title: "i_owe", amounts: debtIOweByCurrency, color: AppColors.expense, icon: "hand.thumbsdown.fill")
+                        MultiCurrencySummaryCard(title: "they_owe_me", amounts: debtOwedToMeByCurrency, color: AppColors.income, icon: "hand.thumbsup.fill")
                     }
                     .padding(.horizontal)
                 }
@@ -98,16 +100,17 @@ struct DashboardView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
                         Image(systemName: "target")
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(AppColors.accent)
                         Text("goals_title")
                             .font(.title2)
                             .bold()
+                            .foregroundStyle(AppColors.textPrimary)
                     }
                     .padding(.horizontal)
                     
                     if goals.isEmpty {
                         Text("no_goals")
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppColors.textSecondary)
                             .padding(.horizontal)
                     } else {
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -125,92 +128,71 @@ struct DashboardView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
                         Image(systemName: "chart.xyaxis.line")
-                            .foregroundStyle(.purple)
+                            .foregroundStyle(AppColors.accent)
                         Text("Analytics")
                             .font(.title2)
                             .bold()
+                            .foregroundStyle(AppColors.textPrimary)
                     }
                     .padding(.horizontal)
                     
-                    WuppyCard {
-                        AnalyticsChartsView()
-                            .padding()
-                    }
-                    .padding(.horizontal)
+                    AnalyticsChartsView()
+                        .padding()
+                        .wuppyCardStyle()
+                        .padding(.horizontal)
                 }
                 
                 Spacer()
             }
             .padding(.vertical)
         }
-        .navigationTitle("")
-        .background(
-            ZStack {
-                Color(nsColor: .windowBackgroundColor)
-                
-                // Subtle ambient gradients
-                GeometryReader { proxy in
-                    Circle()
-                        .fill(.blue.opacity(0.1))
-                        .blur(radius: 80)
-                        .offset(x: -100, y: -100)
-                    
-                    Circle()
-                        .fill(.purple.opacity(0.1))
-                        .blur(radius: 80)
-                        .offset(x: proxy.size.width * 0.8, y: proxy.size.height * 0.5)
-                }
-            }
-            .ignoresSafeArea()
-        )
+        .background(AppColors.background)
     }
 }
 
-struct MultiCurrencySummaryCard<G: View>: View {
+struct MultiCurrencySummaryCard: View {
     let title: LocalizedStringKey
     let amounts: [String: Double]
-    let gradient: G
+    let color: Color
     let icon: String
     
     var body: some View {
-        WuppyCard(padding: 16) {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    ZStack {
-                        Circle()
-                            .fill(.ultraThinMaterial)
-                            .frame(width: 36, height: 36)
-                        
-                        gradient
-                            .mask(Circle().frame(width: 36, height: 36))
-                            .opacity(0.2)
-                        
-                        Image(systemName: icon)
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(.primary)
-                    }
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                ZStack {
+                    Circle()
+                        .fill(color.opacity(0.1))
+                        .frame(width: 36, height: 36)
                     
-                    Spacer()
+                    Image(systemName: icon)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(color)
                 }
                 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .foregroundStyle(.secondary)
-                    
-                    if amounts.isEmpty {
-                        Text(0, format: .currency(code: "VND"))
+                Spacer()
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundStyle(AppColors.textSecondary)
+                
+                if amounts.isEmpty {
+                    Text(0, format: .currency(code: "VND"))
+                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                        .foregroundStyle(AppColors.textPrimary)
+                } else {
+                    ForEach(amounts.sorted(by: { $0.key < $1.key }), id: \.key) { currency, amount in
+                        Text(amount, format: .currency(code: currency))
                             .font(.system(size: 24, weight: .bold, design: .rounded))
-                    } else {
-                        ForEach(amounts.sorted(by: { $0.key < $1.key }), id: \.key) { currency, amount in
-                            Text(amount, format: .currency(code: currency))
-                                .font(.system(size: 24, weight: .bold, design: .rounded))
-                        }
+                            .foregroundStyle(AppColors.textPrimary)
                     }
                 }
             }
         }
+        .padding(16)
+        .wuppyCardStyle()
     }
 }
 
@@ -218,40 +200,41 @@ struct GoalDashboardCard: View {
     let goal: Goal
     
     var body: some View {
-        WuppyCard(padding: 16, isInteractive: true) {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text(goal.name)
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .lineLimit(1)
-                    Spacer()
-                    Text(goal.progress, format: .percent.precision(.fractionLength(0)))
-                        .font(.caption)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(Color.blue)
-                        .clipShape(Capsule())
-                }
-                
-                ProgressView(value: goal.currentAmount, total: goal.targetAmount)
-                    .tint(.blue)
-                
-                HStack {
-                    Text(goal.currentAmount, format: .currency(code: goal.currency))
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Text(goal.targetAmount, format: .currency(code: goal.currency))
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundStyle(.secondary)
-                }
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text(goal.name)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .lineLimit(1)
+                    .foregroundStyle(AppColors.textPrimary)
+                Spacer()
+                Text(goal.progress, format: .percent.precision(.fractionLength(0)))
+                    .font(.caption)
+                    .fontWeight(.bold)
+                    .foregroundStyle(AppColors.background)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(AppColors.accent)
+                    .clipShape(Capsule())
             }
-            .frame(width: 250)
+            
+            ProgressView(value: goal.currentAmount, total: goal.targetAmount)
+                .tint(AppColors.accent)
+            
+            HStack {
+                Text(goal.currentAmount, format: .currency(code: goal.currency))
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundStyle(AppColors.textSecondary)
+                Spacer()
+                Text(goal.targetAmount, format: .currency(code: goal.currency))
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundStyle(AppColors.textSecondary)
+            }
         }
+        .padding(16)
+        .frame(width: 250)
+        .wuppyCardStyle()
     }
 }

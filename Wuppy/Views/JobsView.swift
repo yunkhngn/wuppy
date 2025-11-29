@@ -98,9 +98,7 @@ struct JobsView: View {
             }
         }
         .inspector(isPresented: $showingAddJob) {
-            NavigationStack {
-                AddEditJobView(job: selectedJob)
-            }
+            AddEditJobView(job: selectedJob)
             .id(selectedJob?.id)
             .environment(\.locale, locale)
             .inspectorColumnWidth(min: 400, ideal: 500, max: 600)

@@ -43,7 +43,7 @@ final class Job {
     var rate: Double? // For hourly
     var fixedPrice: Double? // For fixed
     var depositAmount: Double
-
+    var totalReceivedAmount: Double
     var createdDate: Date
     var startDate: Date?
     var deadline: Date?
@@ -57,7 +57,7 @@ final class Job {
     @Relationship(deleteRule: .cascade) var timeSessions: [TimeSession]?
     @Relationship(deleteRule: .nullify) var transactions: [Transaction]?
     
-    init(title: String, clientName: String, jobDescription: String = "", jobType: JobType = .other, category: JobCategory? = nil, billingType: BillingType = .fixedPrice, rate: Double? = nil, fixedPrice: Double? = nil, currency: String = "VND", depositAmount: Double = 0, createdDate: Date = Date(), startDate: Date? = nil, deadline: Date? = nil, paymentDueDate: Date? = nil, status: JobStatus = .draft, notes: String = "", tags: [String] = []) {
+    init(title: String, clientName: String, jobDescription: String = "", jobType: JobType = .other, category: JobCategory? = nil, billingType: BillingType = .fixedPrice, rate: Double? = nil, fixedPrice: Double? = nil, currency: String = "VND", depositAmount: Double = 0, totalReceivedAmount: Double = 0, createdDate: Date = Date(), startDate: Date? = nil, deadline: Date? = nil, paymentDueDate: Date? = nil, status: JobStatus = .draft, notes: String = "", tags: [String] = []) {
         self.title = title
         self.clientName = clientName
         self.jobDescription = jobDescription
@@ -68,6 +68,7 @@ final class Job {
         self.fixedPrice = fixedPrice
         self.currency = currency
         self.depositAmount = depositAmount
+        self.totalReceivedAmount = totalReceivedAmount
         self.createdDate = createdDate
         self.startDate = startDate
         self.deadline = deadline
@@ -75,10 +76,6 @@ final class Job {
         self.status = status
         self.notes = notes
         self.tags = tags
-    }
-    
-    var totalReceivedAmount: Double {
-        transactions?.reduce(0) { $0 + $1.amount } ?? 0
     }
     
     var remainingAmount: Double {

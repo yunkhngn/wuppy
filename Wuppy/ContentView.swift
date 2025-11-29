@@ -9,41 +9,36 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @State private var selection: AppScreen? = .dashboard
+    @State private var selection: AppScreen = .dashboard
     
     var body: some View {
         NavigationSplitView {
-            AppSidebar(selection: $selection)
+            AppSidebar(selection: Binding(
+                get: { selection },
+                set: { if let value = $0 { selection = value } }
+            ))
         } detail: {
             switch selection {
             case .dashboard:
                 DashboardView()
             case .jobs:
-                NavigationStack {
-                    JobsView()
-                }
+                JobsView()
             case .debts:
-                NavigationStack {
-                    DebtsView()
-                }
+                DebtsView()
             case .transactions:
-                NavigationStack {
-                    TransactionsView()
-                }
+                TransactionsView()
             case .goals:
-                NavigationStack {
-                    GoalsView()
-                }
+                GoalsView()
             case .settings:
                 NavigationStack {
                     SettingsView()
                 }
-            case .none:
-                Text("Select an item")
             }
         }
-        }
+        .background(AppColors.background)
+        .preferredColorScheme(.dark) // Force dark mode
     }
+}
 
 #Preview {
     ContentView()
